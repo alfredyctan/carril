@@ -135,28 +135,7 @@ public enum FixTag {
 	PriAmt(8909),
 	CntAmt(8910),
 	PriAmt2(8911),
-	CntAmt2(8912),
-	OrderedQty(9000),
-	BusClient(9001),
-	CustomerBranch(9002),
-	DomAccount(9003),
-	CINCode(9004),
-	RetailName(9005),
-	OriginalChannel(9006),
-	FCAAccount(9007),
-	FCACurrency(9008),
-	BidDomCurrency(9009),
-	BidDomPriRate(9010),
-	BidDomCntRate(9011),
-	BidDomAmount(9012),
-	AskDomCurrency(9013),
-	AskDomPriRate(9014),
-	AskDomCntRate(9015),
-	AskDomAmount(9016),
-	DealtSideDomPriTRate(9017),
-	DealtSideDomCntTRate(9018),
-	DealtTRate(9019),
-	IndirectCompTRate(9020);
+	CntAmt2(8912);
 	
 	private static final int MAX = 10000;
 

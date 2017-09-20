@@ -25,9 +25,9 @@ public class RawFixToFixMessageAccessorFactory implements AccessorFactory<RawFix
     		throw new TransportException("Unsupported reference type, only support " + ObjectUtil.arrayToString(Reference.values()));
     	}
     	switch (reference) {
-    		case Fix:
-    		case Fix_HEADER:
-    		case Fix_TRAILER:
+    		case FIX:
+    		case FIX_HEADER:
+    		case FIX_TRAILER:
     			return new RawFixGetter(index, type);
     		case STATE:
     			return new StateGetter<RawFix>(state, new RawFixGetter(index, type));

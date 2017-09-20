@@ -3,8 +3,8 @@ package org.afc.ferrocarril.fix.mapping.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.afc.ferrocarril.fix.mapping.SomeConstant;
-import org.afc.ferrocarril.fix.mapping.SomeEnum;
+import org.afc.ferrocarril.SomeConstant;
+import org.afc.ferrocarril.SomeEnum;
 import org.afc.ferrocarril.transport.TransportException;
 import org.afc.util.JUnit4Util;
 import org.junit.After;
@@ -35,7 +35,7 @@ public class ConstGetterTest {
 	public void testGetStaticFinalString() {
 		JUnit4Util.startCurrentTest(getClass());
 
-		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.fix.mapping.SomeConstant.CONST_A",
+		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.SomeConstant.CONST_A",
 				null);
 		String expect = SomeConstant.CONST_A;
 		String actual = (String) getter.get(null);
@@ -50,7 +50,7 @@ public class ConstGetterTest {
 	public void testGetStaticFinalInt() {
 		JUnit4Util.startCurrentTest(getClass());
 
-		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.fix.mapping.SomeConstant.INT_A",
+		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.SomeConstant.INT_A",
 				null);
 		int expect = SomeConstant.INT_A;
 		int actual = (Integer) getter.get(null);
@@ -67,7 +67,7 @@ public class ConstGetterTest {
 
 		try {
 			ConstGetter<?> getter = new ConstGetter<Void>(
-					"org.afc.ferrocarril.fix.mapping.SomeConstant.NOT_EXIST", null);
+					"org.afc.ferrocarril.SomeConstant.NOT_EXIST", null);
 			String actual = (String) getter.get(null);
 			System.out.println("actual:");
 			System.out.println(actual);
@@ -82,7 +82,7 @@ public class ConstGetterTest {
 	public void testGetEnum() {
 		JUnit4Util.startCurrentTest(getClass());
 
-		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.fix.mapping.SomeEnum.ENUM_A",
+		ConstGetter<?> getter = new ConstGetter<Void>("org.afc.ferrocarril.SomeEnum.ENUM_A",
 				null);
 		SomeEnum expect = SomeEnum.ENUM_A;
 		Object actual = getter.get(null);
@@ -99,7 +99,7 @@ public class ConstGetterTest {
 
 		try {
 			ConstGetter<?> getter = new ConstGetter<Void>(
-					"org.afc.ferrocarril.fix.mapping.SomeEnum.ENUM_NOT_EXIST", null);
+					"org.afc.ferrocarril.SomeEnum.ENUM_NOT_EXIST", null);
 			Object actual = getter.get(null);
 			System.out.println("actual:");
 			System.out.println(actual);

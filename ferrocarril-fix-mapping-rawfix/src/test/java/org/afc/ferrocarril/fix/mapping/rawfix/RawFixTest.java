@@ -19,7 +19,7 @@ public class RawFixTest {
 
 //	0         1         2         3         4         5         6         7         8         9         
 //	0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-//	8=Fix.4.2|9=202|61=999|35=D|34=291|49=INTFXSTR2|52=20111124-00:04:51.716|56=AFCUKFix|1=Alior Bank S
+//	8=Fix.4.2|9=202|61=999|35=D|34=291|49=INTFXSTR2|52=20111124-00:04:51.716|56=AFCDUKFIX|1=Alior Bank S
 //	0         1         2         3         4         5         6         7         8         9         
 //	0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 //	A|110=FXI154886615|15=USD|21=2|38=10000|40=D|44=77.24|54=1|55=USD/JPY|60=20111124-00:04:51.716|117=2
@@ -28,7 +28,7 @@ public class RawFixTest {
 //	523232|167=FOR|7533=INTS2|10=066|	
 
 	private String rawFixMsg = ("8=Fix.4.2|9=202|61=999|35=D|34=291|49=INTFXSTR2|52=20111124-00:04:51.716|" + 
-			"56=AFCUKFix|1=Alior Bank SA|110=FXI154886615|15=USD|21=2|38=10000|40=D|44=77.24|54=1|55=USD/JPY|" + 
+			"56=AFCDUKFIX|1=Alior Bank SA|110=FXI154886615|15=USD|21=2|38=10000|40=D|44=77.24|54=1|55=USD/JPY|" + 
 			"60=20111124-00:04:51.716|117=2523232|167=FOR|7533=INTS2|10=066|").replace('|', SOH);	
 
 	
@@ -57,7 +57,7 @@ public class RawFixTest {
 		assertEquals(10,               pilot.getIndex());
 		assertEquals("20111124-00:04:51.716", pilot.findValue("52"));
 		assertEquals(73,               pilot.getIndex());
-		assertEquals("AFCUKFix",             pilot.findValue("56"));
+		assertEquals("AFCDUKFIX",             pilot.findValue("56"));
 		assertEquals(86,               pilot.getIndex());
 		assertEquals(null,                     pilot.findValue("35"));
 		assertEquals(86,               pilot.getIndex());
@@ -121,31 +121,31 @@ public class RawFixTest {
 //
 	@Test
 	public void testAppend() throws ParseException {
-		RawFix rawFix = RawFix.forWrite("Fix.4.2", "D", "INTFXSTR2", "AFCUKFix");
+		RawFix rawFix = RawFix.forWrite("Fix.4.2", "D", "INTFXSTR2", "AFCDUKFIX");
 
 		rawFix.append("110", "FXI154886615");
-		assertEquals("35=D|49=INTFXSTR2|56=AFCUKFix|110=FXI154886615|", rawFix.toString().replace(SOH, '|'));
+		assertEquals("35=D|49=INTFXSTR2|56=AFCDUKFIX|110=FXI154886615|", rawFix.toString().replace(SOH, '|'));
 
 		rawFix.append("54", "1");
-		assertEquals("35=D|49=INTFXSTR2|56=AFCUKFix|110=FXI154886615|54=1|", rawFix.toString().replace(SOH, '|'));
+		assertEquals("35=D|49=INTFXSTR2|56=AFCDUKFIX|110=FXI154886615|54=1|", rawFix.toString().replace(SOH, '|'));
 
 		rawFix.append("55", "USD/JPY");
-		assertEquals("35=D|49=INTFXSTR2|56=AFCUKFix|110=FXI154886615|54=1|55=USD/JPY|", rawFix.toString().replace(SOH, '|'));
+		assertEquals("35=D|49=INTFXSTR2|56=AFCDUKFIX|110=FXI154886615|54=1|55=USD/JPY|", rawFix.toString().replace(SOH, '|'));
 	}
 	
 	@Test
 	public void testSeal() throws ParseException {
-		RawFix rawFix = RawFix.forWrite("Fix.4.2", "D", "INTFXSTR2", "AFCUKFix");
+		RawFix rawFix = RawFix.forWrite("Fix.4.2", "D", "INTFXSTR2", "AFCDUKFIX");
 
 		rawFix.append("110", "FXI154886615");
 		rawFix.append("54", "1");
 		rawFix.append("55", "USD/JPY");
 		rawFix.seal();
-		assertEquals("8=Fix.4.2|35=D|49=INTFXSTR2|56=AFCUKFix|110=FXI154886615|54=1|55=USD/JPY|", rawFix.toString().replace(SOH, '|'));
+		assertEquals("8=Fix.4.2|35=D|49=INTFXSTR2|56=AFCDUKFIX|110=FXI154886615|54=1|55=USD/JPY|", rawFix.toString().replace(SOH, '|'));
 		
 //		long start = System.currentTimeMillis();
 //		for (int i = 0; i < 10000000; i++) {
-//			RawFix rawFix2 = new RawFix("Fix.4.2", "D", "INTFXSTR2", "AFCUKFix");
+//			RawFix rawFix2 = new RawFix("Fix.4.2", "D", "INTFXSTR2", "AFCDUKFIX");
 //			rawFix2.append("110", "FXI154886615");
 //			rawFix2.append("54", "1");
 //			rawFix2.append("55", "USD/JPY");

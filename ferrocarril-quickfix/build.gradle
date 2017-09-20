@@ -1,8 +1,10 @@
 dependencies {
 	api project(':ferrocarril')
 
+	implementation project(':ferrocarril-fix-tag')
 	implementation project(':ferrocarril-fix-mapping')
 	implementation project(':ferrocarril-fix-mapping-quickfix')
+	implementation 'org.afc:afc-util:1.0.0-SNAPSHOT'
 	implementation 'org.quickfixj:quickfixj-all:1.6.2'
 
 	testImplementation project(':ferrocarril-fix-testing')

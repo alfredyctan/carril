@@ -37,9 +37,9 @@ public class FixMessageToRawFixAccessorFactory implements AccessorFactory<FixMes
 	@Override
 	public Setter<FixMessage, RawFix, Object> createSetter(SessionState state, Reference reference, String index, Type type) {
 		switch (reference) {
-			case Fix:
-			case Fix_HEADER:
-			case Fix_TRAILER:
+			case FIX:
+			case FIX_HEADER:
+			case FIX_TRAILER:
 				return new RawFixSetter(index, type);
 			case STATE:
 				return new StateSetter<FixMessage, RawFix>(state, new FixMessageGetter<FixMessage>(index));

@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="CONST"/>
  *     &lt;enumeration value="STATE"/>
  *     &lt;enumeration value="OBJ"/>
- *     &lt;enumeration value="Fix"/>
+ *     &lt;enumeration value="FIX"/>
  *     &lt;enumeration value="SCHEMA"/>
- *     &lt;enumeration value="Fix-HEADER"/>
- *     &lt;enumeration value="Fix-TRAILER"/>
+ *     &lt;enumeration value="FIX-HEADER"/>
+ *     &lt;enumeration value="FIX-TRAILER"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -33,12 +33,12 @@ public enum Reference {
     CONST("CONST"),
     STATE("STATE"),
     OBJ("OBJ"),
-    Fix("Fix"),
+    FIX("FIX"),
     SCHEMA("SCHEMA"),
-    @XmlEnumValue("Fix-HEADER")
-    Fix_HEADER("Fix-HEADER"),
-    @XmlEnumValue("Fix-TRAILER")
-    Fix_TRAILER("Fix-TRAILER");
+    @XmlEnumValue("FIX-HEADER")
+    FIX_HEADER("FIX-HEADER"),
+    @XmlEnumValue("FIX-TRAILER")
+    FIX_TRAILER("FIX-TRAILER");
     private final String value;
 
     Reference(String v) {

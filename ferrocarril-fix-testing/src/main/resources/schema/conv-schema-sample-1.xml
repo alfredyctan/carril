@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fix-conv xmlns="http://www.hsbc.com/gbm/fxmm/fix">
-	<object-package>com.hsbc.efx.common.transport.qfix.convertor</object-package>
+<fix-conv xmlns="http://www.afc.org/ferrocarril/fix">
+	<object-package>org.afc.ferrocarril.qfix.convertor</object-package>
 	<fix-to-obj>
-		<msg-map name="sample1a" source="FIX-HEADER" source-index="${61}" source-expression="999" target-type="com.hsbc.efx.common.transport.sample.FixObject">
+		<msg-map name="sample1a" source="FIX-HEADER" source-index="${61}" source-expression="999" target-type="org.afc.ferrocarril.sample.FixObject">
 			<tags>
 				<tag name="MSG-ID"      type="STRING"      source="SCHEMA" source-index="Msg1A" target="OBJ" target-index="MsgID"      use="REQ" />
 				<tag name="FISRTS-9100"      type="GROUP"  source="FIX"    source-index="${9100}" target="OBJ" target-index="firsts" use="OPT">
@@ -27,7 +27,7 @@
 				<tag name="FIX-STATE-DYN"	type="DECIMAL"  source="FIX"    source-index="${1}"                   
 											               target="STATE"  target-index="state:${37}" use="OPT" />
 				<tag name="STATE-DYN-OBJ" 	type="DECIMAL"  source="STATE"  source-index="state:${37}" target="OBJ"   target-index="getField1"/>
-				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="OBJ"   target-index="getConst"     use="OPT" />
+				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="org.afc.ferrocarril.SomeConstant.CONST_A"               target="OBJ"   target-index="getConst"     use="OPT" />
 			</tags>
 		</msg-map>
 	</fix-to-obj>
@@ -66,8 +66,8 @@
 				<tag name="OBJ-STATE"     	type="STRING"  source="OBJ"    source-index="${getField1}"                   target="STATE" target-index="key1"   use="OPT" />
 				<tag name="OBJ-STATE-DYN"	type="DECIMAL"  source="OBJ"    source-index="${getField1}"                   
 											               target="STATE"  target-index="key1/${getField2}/${getField2}" use="OPT" />
-				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="FIX"   target-index="100"     use="OPT" />
-				<tag name="CONST-STATE"   	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="STATE" target-index="const1" use="OPT" />
+				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="org.afc.ferrocarril.SomeConstant.CONST_A"               target="FIX"   target-index="100"     use="OPT" />
+				<tag name="CONST-STATE"   	type="STRING"  source="CONST"  source-index="org.afc.ferrocarril.SomeConstant.CONST_A"               target="STATE" target-index="const1" use="OPT" />
 				<tag name="SCHEMA-FIX"    	type="STRING"  source="SCHEMA" source-index="Defined in Schema"              target="FIX"   target-index="20"     use="OPT" />
 				<tag name="STATE-FIX"     	type="STRING"  source="STATE"  source-index="key1"                           target="STATE" target-index="30"     use="OPT" />
 				<tag name="STATE-DYN-FIX" 	type="DECIMAL"  source="STATE"  source-index="key1/${getField2}/${getField2}" target="FIX"   target-index="31"/>
@@ -80,7 +80,7 @@
 				<tag name="STATE-OBJ" source="STATE" source-index="key1" target="STATE" target-index="30" use="OPT" />
 			</on-error>
 		</msg-map>
-		<msg-map name="sample2" source="OBJ" source-index="MsgID" source-expression="HSBC.TAPI.RFQ.REQ" target-type="R">
+		<msg-map name="sample2" source="OBJ" source-index="MsgID" source-expression="RFQ.REQ" target-type="R">
 			<conditions>
 				<condition source="OBJ" source-index="PdtCode" source-expression="SWP" />
 			</conditions>

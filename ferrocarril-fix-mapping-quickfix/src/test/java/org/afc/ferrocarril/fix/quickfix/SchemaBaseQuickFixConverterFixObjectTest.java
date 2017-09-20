@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-import org.afc.ferrocarril.fix.mapping.SomeConstant;
+import org.afc.ferrocarril.SomeConstant;
 import org.afc.ferrocarril.sample.FixObject;
 import org.afc.ferrocarril.sample.FixObjectTestCaseFactory;
 import org.afc.util.DateUtil;
@@ -213,7 +213,7 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
     	Message message = new Message();
     	message.getHeader().setString(35, "j");
     	message.getHeader().setString(49, "INTFXSTR2");
-    	message.getHeader().setString(56, "AFCUKFix");
+    	message.getHeader().setString(56, "AFCDUKFIX");
     	message.getHeader().setInt(34, 100);
     	message.getHeader().setUtcTimeStamp(52, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345"), true);
     	message.getHeader().setInt(61, seed * 999);
@@ -255,10 +255,10 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
 	}
 
 	private static String createRawFixString(int seed) {
-		return "9=196|35=j|49=INTFXSTR2|56=AFCUKFix|61=999|1=100|2=100/200|20=Defined in Schema|31=100|37=100|40=111|50=999|62=test1|63=100|64=9.9|65=20110811-19:45:12.000|66=20110811|67=19:45:12.000|100=Value A|68=N|10=227|";
+		return "9=196|35=j|49=INTFXSTR2|56=AFCDUKFIX|61=999|1=100|2=100/200|20=Defined in Schema|31=100|37=100|40=111|50=999|62=test1|63=100|64=9.9|65=20110811-19:45:12.000|66=20110811|67=19:45:12.000|100=Value A|68=N|10=209|";
 	}
 
 	private static String createNestedRawFixString(int seed) {
-		return "9=230|35=j|49=INTFXSTR2|56=AFCUKFix|61=999|2=null/null|20=Defined in Schema|62=Defined in Schema|100=Value A|9100=1|9101=F10|9200=2|9201=S200|9300=3|9301=T3000|9301=T8000|9301=T15000|9201=S600|9300=3|9301=T4000|9301=T10000|9301=T18000|10=186|";
+		return "9=230|35=j|49=INTFXSTR2|56=AFCDUKFIX|61=999|2=null/null|20=Defined in Schema|62=Defined in Schema|100=Value A|9100=1|9101=F10|9200=2|9201=S200|9300=3|9301=T3000|9301=T8000|9301=T15000|9201=S600|9300=3|9301=T4000|9301=T10000|9301=T18000|10=168|";
 	}
 }

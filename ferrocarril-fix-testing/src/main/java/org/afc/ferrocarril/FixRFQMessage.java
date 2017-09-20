@@ -24,7 +24,6 @@ public class FixRFQMessage implements QuickFixMessage {
 		protected Map<String, AccessorMapping> initialValue() {
 			return AccessorMapping.createAccessorMappingMap(
 				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.QuoteReqID.name(),        "getQuoteReqID",        "setQuoteReqID",        String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.IndirectCompTRate.name(), "getIndirectCompTRate", "setIndirectCompTRate", String.class),
 				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.NoRelatedSym.name(),      "getNoRelatedSym",      "setNoRelatedSym",      String.class),
 				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Symbol.name(),            "getSymbol",            "setSymbol",            String.class),
 				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.SecurityType.name(),      "getSecurityType",      "setSecurityType",      String.class),
@@ -39,7 +38,6 @@ public class FixRFQMessage implements QuickFixMessage {
 
     private String msgType; // 35=R
 	private String quoteReqID; // 131=getrate_FF_1
-	private String indirectCompTRate; // 9020=Y
 	private String noRelatedSym; // 146=1
 	private String symbol; // 55=USD/JPY
 	private String securityType; // 167=FOR
@@ -84,14 +82,6 @@ public class FixRFQMessage implements QuickFixMessage {
 
 	public void setQuoteReqID(String quoteReqID) {
 		this.quoteReqID = quoteReqID;
-	}
-
-	public String getIndirectCompTRate() {
-		return indirectCompTRate;
-	}
-
-	public void setIndirectCompTRate(String indirectCompTRate) {
-		this.indirectCompTRate = indirectCompTRate;
 	}
 
 	public String getNoRelatedSym() {

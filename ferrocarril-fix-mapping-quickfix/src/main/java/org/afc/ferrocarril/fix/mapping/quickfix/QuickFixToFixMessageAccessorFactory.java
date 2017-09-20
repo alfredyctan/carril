@@ -23,14 +23,14 @@ public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Mess
 	@Override
     public Getter<Message> createGetter(SessionState state, Reference reference, String index, Type type) {
     	if (reference == null) {
-    		throw new TransportException("Unsupported reference type, only support {" + Reference.Fix + "," + Reference.STATE + "," + Reference.CONST + "," + Reference.SCHEMA + "}");
+    		throw new TransportException("Unsupported reference type, only support {" + Reference.FIX + "," + Reference.STATE + "," + Reference.CONST + "," + Reference.SCHEMA + "}");
     	}
     	switch (reference) {
-    		case Fix:
+    		case FIX:
     			return new QuickFixBodyGetter(index, type);
-    		case Fix_HEADER:
+    		case FIX_HEADER:
     			return new QuickFixHeaderGetter(index, type);
-    		case Fix_TRAILER:
+    		case FIX_TRAILER:
     			return new QuickFixTrailerGetter(index, type);
     		case STATE:
     			return new StateGetter<Message>(state, new QuickFixBodyGetter(index, type));
@@ -40,7 +40,7 @@ public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Mess
     			return new SchemaGetter<Message>(index);
     		default:
     			throw new TransportException("Unsupported reference type " + reference + 
-    				", only support {" + Reference.Fix + "," + Reference.STATE + "," + Reference.CONST + "," + Reference.SCHEMA + "}");
+    				", only support {" + Reference.FIX + "," + Reference.STATE + "," + Reference.CONST + "," + Reference.SCHEMA + "}");
     	}
     }
 

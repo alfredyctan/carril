@@ -3,6 +3,8 @@ dependencies {
 
 	implementation project(':ferrocarril-fix-tag')
 	implementation project(':ferrocarril-fix-mapping')
+
+	implementation 'org.afc:afc-util:1.0.0-SNAPSHOT'
+	
 	testImplementation project(':ferrocarril-fix-testing')
-//	testImplementation 'com.thoughtworks.xstream:xstream:1.3.1'
 }

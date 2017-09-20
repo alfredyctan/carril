@@ -39,11 +39,11 @@ public class FixMessageToQuickFixAccessorFactory implements AccessorFactory<FixM
 	@Override
 	public Setter<FixMessage, Message, Object> createSetter(SessionState state, Reference reference, String index, Type type) {
 		switch (reference) {
-			case Fix:
+			case FIX:
 				return new QuickFixBodySetter(index, type);
-			case Fix_HEADER:
+			case FIX_HEADER:
 				return new QuickFixHeaderSetter(index, type);
-			case Fix_TRAILER:
+			case FIX_TRAILER:
 				return new QuickFixTrailerSetter(index, type);
 			case STATE:
 				return new StateSetter<FixMessage, Message>(state, new FixMessageGetter<FixMessage>(index));

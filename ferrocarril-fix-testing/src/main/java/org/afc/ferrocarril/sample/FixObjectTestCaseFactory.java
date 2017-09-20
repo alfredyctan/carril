@@ -23,7 +23,7 @@ public class FixObjectTestCaseFactory {
     	fixObject.setTime(DateUtil.parseUTCDatetime("1970-01-01 19:45:12.345"));
     	fixObject.setBool((seed%2==0));
     	fixObject.setConstant("Value A");
-    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCUKFix", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
+    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCDUKFIX", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
     	return fixObject; 
     }
 	
@@ -44,16 +44,16 @@ public class FixObjectTestCaseFactory {
     	fixObject.setField2(new BigDecimal(seed * 200));
     	fixObject.setOptional(new BigDecimal(seed * 111));
     	fixObject.setProhibit(new BigDecimal(seed * 999));
-    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCUKFix", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
+    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCDUKFIX", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
     	return fixObject; 
     }
 
 //	public static String createRawFixString(int seed) {
-//		return "9=228|35=j|34=100|49=INTFXSTR2|52=20110809-10:56:12.345|56=AFCUKFix|61=999|1=100|2=100/200|20=Defined in Schema|31=100|37=100|40=111|50=999|62=test1|63=100|64=9.9|65=20110811-19:45:12.000|66=20110811|67=19:45:12.000|100=Value A|68=N|10=233|";
+//		return "9=228|35=j|34=100|49=INTFXSTR2|52=20110809-10:56:12.345|56=AFCDUKFIX|61=999|1=100|2=100/200|20=Defined in Schema|31=100|37=100|40=111|50=999|62=test1|63=100|64=9.9|65=20110811-19:45:12.000|66=20110811|67=19:45:12.000|100=Value A|68=N|10=233|";
 //	}
 //	
 //	public static String createNestedRawFixString(int seed) {
-//		return "9=262|35=j|34=100|49=INTFXSTR2|52=20110809-10:56:12.345|56=AFCUKFix|61=999|2=null/null|20=Defined in Schema|62=Defined in Schema|100=Value A|9100=1|9101=F10|9200=2|9201=S200|9300=3|9301=T3000|9301=T8000|9301=T15000|9201=S600|9300=3|9301=T4000|9301=T10000|9301=T18000|10=201|";
+//		return "9=262|35=j|34=100|49=INTFXSTR2|52=20110809-10:56:12.345|56=AFCDUKFIX|61=999|2=null/null|20=Defined in Schema|62=Defined in Schema|100=Value A|9100=1|9101=F10|9200=2|9201=S200|9300=3|9301=T3000|9301=T8000|9301=T15000|9201=S600|9300=3|9301=T4000|9301=T10000|9301=T18000|10=201|";
 //	}
 	
 	public static FixObject createNestedFixObject(int seed) throws ParseException {
@@ -65,7 +65,7 @@ public class FixObjectTestCaseFactory {
     	List<First> firsts = new LinkedList<First>();
 		firsts.add(createFirstObject(1, 10));
     	fixObject.setFirsts(firsts);
-    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCUKFix", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
+    	fixObject.setContext(new FixBaseMessage.Context("Fix.4.2", "R", "INTFXSTR2", "AFCDUKFIX", 100, DateUtil.parseUTCTimestamp("2011-08-09 10:56:12.345")));
     	return fixObject;
     }
 

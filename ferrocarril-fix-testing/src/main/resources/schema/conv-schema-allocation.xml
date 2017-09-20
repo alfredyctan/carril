@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fix-conv xmlns="http://www.hsbc.com/gbm/fxmm/fix">
+<fix-conv xmlns="http://www.afc.org/ferrocarril/fix">
 	<fix-to-obj>
-		<msg-map name="Allocation" source="FIX-HEADER" source-index="${35}" source-expression="J" target-type="com.hsbc.efx.common.transport.alloc.Allocation">
+		<msg-map name="Allocation" source="FIX-HEADER" source-index="${35}" source-expression="J" target-type="org.afc.ferrocarril.alloc.Allocation">
 			<conditions>
 				<condition source="FIX" source-index="${71}" source-expression="." />
 			</conditions>
