@@ -4,11 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.afc.ferrocarril.transport.ExceptionListener;
-import org.afc.ferrocarril.transport.TransportException;
-import org.afc.ferrocarril.transport.TransportListener;
 import org.afc.ferrocarril.transport.Transport.State;
-import org.afc.test.JUnit4Util;
+import org.afc.util.JUnit4Util;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;

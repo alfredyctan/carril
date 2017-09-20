@@ -1,0 +1,20 @@
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'maven'
+
+	group='org.afc.ferrocarril'
+	version='1.0.0-SNAPSHOT'
+
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+}
+
+subprojects {
+	dependencies {
+		compile 'org.slf4j:slf4j-api:1.7.25'
+		testCompile 'junit:junit:4.12'
+		testCompile 'org.jmock:jmock-junit4:2.5.1'
+	}
+}

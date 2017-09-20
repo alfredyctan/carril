@@ -1,0 +1,8 @@
+dependencies {
+	
+	compile 'org.afc:afc-util:1.0.0-SNAPSHOT'
+	
+	compile project(':ferrocarril')
+	compile project(':ferrocarril-fix-tag')
+}
+

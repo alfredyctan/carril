@@ -6,8 +6,7 @@ import static org.junit.Assert.fail;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.afc.ferrocarril.text.UTCDateTimestampFormat;
-import org.afc.test.JUnit4Util;
+import org.afc.util.JUnit4Util;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -1,11 +1,11 @@
 package org.afc.ferrocarril.text;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 
-import org.afc.ferrocarril.text.LongFormat;
-import org.afc.test.JUnit4Util;
+import org.afc.util.JUnit4Util;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

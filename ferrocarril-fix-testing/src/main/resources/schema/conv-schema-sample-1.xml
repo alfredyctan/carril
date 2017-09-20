@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fix-conv xmlns="http://www.hsbc.com/gbm/fxmm/fix">
+	<object-package>com.hsbc.efx.common.transport.qfix.convertor</object-package>
+	<fix-to-obj>
+		<msg-map name="sample1a" source="FIX-HEADER" source-index="${61}" source-expression="999" target-type="com.hsbc.efx.common.transport.sample.FixObject">
+			<tags>
+				<tag name="MSG-ID"      type="STRING"      source="SCHEMA" source-index="Msg1A" target="OBJ" target-index="MsgID"      use="REQ" />
+				<tag name="FISRTS-9100"      type="GROUP"  source="FIX"    source-index="${9100}" target="OBJ" target-index="firsts" use="OPT">
+					<tag name="SECONDS-9200"      type="GROUP"  source="FIX"    source-index="${9200}" target="OBJ" target-index="seconds" use="REQ">
+						<tag name="SECOND-FIELD-9201"      type="STRING"  source="FIX"    source-index="${9201}" target="OBJ" target-index="secondField" use="REQ"/>
+						<tag name="THIRDS-9300"      type="GROUP"  source="FIX"    source-index="${9300}" target="OBJ" target-index="thirds" use="REQ">
+							<tag name="THIRD-FIELD-9301"      type="STRING"  source="FIX"    source-index="${9301}" target="OBJ" target-index="thirdField" use="REQ"/>
+						</tag>
+					</tag>
+					<tag name="FISRT-FIELD-9101"      type="STRING"  source="FIX"    source-index="${9101}" target="OBJ" target-index="firstField" use="OPT"/>
+				</tag>
+				<tag name="SCHEMA-FIX"    	type="STRING"  source="SCHEMA" source-index="Msg1A"              target="OBJ"   target-index="MsgID"     use="OPT" />
+				<tag name="SCHEMA-FIX"    	type="STRING"  source="SCHEMA" source-index="Defined in Schema"              target="OBJ"   target-index="string"     use="OPT" />
+				<tag name="FIX-INT"      type="INT"      source="FIX-HEADER" source-index="${61}" target="OBJ" target-index="int"      use="OPT" />
+				<tag name="FIX-STRING"   type="STRING"   source="FIX" source-index="${62}" target="OBJ" target-index="string"   use="OPT" />
+				<tag name="FIX-DECIMAL"  type="DECIMAL"  source="FIX" source-index="${63}" target="OBJ" target-index="decimal"  use="OPT" />
+				<tag name="FIX-DOUBLE"   type="DOUBLE"   source="FIX" source-index="${64}" target="OBJ" target-index="double"   use="OPT" />
+				<tag name="FIX-DATETIME" type="DATETIMESTAMP" source="FIX" source-index="${65}" target="OBJ" target-index="datetime" use="OPT" />
+				<tag name="FIX-DATE"     type="DATE"     source="FIX" source-index="${66}" target="OBJ" target-index="date"     use="OPT" />
+				<tag name="FIX-TIME"     type="TIME"     source="FIX" source-index="${67}" target="OBJ" target-index="time"     use="OPT" />
+				<tag name="FIX-BOOLEAN"  type="BOOLEAN"  source="FIX-TRAILER" source-index="${68}" target="OBJ" target-index="boolean"  use="OPT" />
+				<tag name="FIX-STATE-DYN"	type="DECIMAL"  source="FIX"    source-index="${1}"                   
+											               target="STATE"  target-index="state:${37}" use="OPT" />
+				<tag name="STATE-DYN-OBJ" 	type="DECIMAL"  source="STATE"  source-index="state:${37}" target="OBJ"   target-index="getField1"/>
+				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="OBJ"   target-index="getConst"     use="OPT" />
+			</tags>
+		</msg-map>
+	</fix-to-obj>
+
+	<obj-to-fix>
+		<msg-map name="sample1" source="OBJ" source-index="${MsgID}" source-expression="Msg1A" target-type="j">
+			<conditions>
+				<condition source="OBJ" source-index="${int}" source-expression="999" />
+			</conditions>
+			<tags>
+				<tag name="firsts"      type="GROUP"  source="OBJ"    source-index="${firsts}" target="FIX" target-index="9100" use="OPT">
+					<tag name="firstField"      type="STRING"  source="OBJ"    source-index="${firstField}" target="FIX" target-index="9101" use="OPT"/>
+					<tag name="seconds"      type="GROUP"  source="OBJ"    source-index="${seconds}" target="FIX" target-index="9200" use="OPT">
+						<tag name="secondField"      type="STRING"  source="OBJ"    source-index="${secondField}" target="FIX" target-index="9201" use="OPT"/>
+						<tag name="thirds"      type="GROUP"  source="OBJ"    source-index="${thirds}" target="FIX" target-index="9300" use="OPT">
+							<tag name="thirdField"      type="STRING"  source="OBJ"    source-index="${thirdField}" target="FIX" target-index="9301" use="OPT"/>
+						</tag>
+					</tag>
+				</tag>
+
+				<tag name="INT-FIX"         type="INT"     source="OBJ"    source-index="${int}"                         target="FIX-HEADER"   target-index="61"      use="REQ" />
+				<tag name="STRING-FIX"      type="STRING"  source="OBJ"    source-index="${string}"                      target="FIX"   target-index="62"      use="OPT" />
+				<tag name="DECIMAL-FIX"     type="DECIMAL" source="OBJ"    source-index="${decimal}"                     target="FIX"   target-index="63"      use="OPT" />
+				<tag name="DOUBLE-FIX"      type="DOUBLE"  source="OBJ"    source-index="${double}"                      target="FIX"   target-index="64"      use="OPT" />
+				<tag name="DATETIME-FIX"    type="DATETIMESTAMP" source="OBJ"    source-index="${datetime}"                   target="FIX"   target-index="65"      use="OPT" />
+				<tag name="DATE-FIX"        type="DATE"    source="OBJ"    source-index="${date}"                        target="FIX"   target-index="66"      use="OPT" />
+				<tag name="TIME-FIX"        type="TIME"    source="OBJ"    source-index="${time}"                        target="FIX"   target-index="67"      use="OPT" />
+				<tag name="BOOLEAN-FIX"     type="BOOLEAN" source="OBJ"    source-index="${boolean}"                     target="FIX-TRAILER"   target-index="68"      use="OPT" />
+	
+				<tag name="OBJ-STATE-DYN"	type="DECIMAL"  source="OBJ"    source-index="${getField1}"                   
+											               target="STATE"  target-index="${getField2}" use="OPT" />
+				<tag name="STATE-DYN-FIX" 	type="DECIMAL"  source="STATE"  source-index="${getField2}" target="FIX"   target-index="37"/>
+	
+				<tag name="OBJ-FIX"       	type="DECIMAL"  source="OBJ"    source-index="${getField1}"                   target="FIX"   target-index="1"      use="OPT" />
+				<tag name="MF-OBJ-FIX"    	type="STRING"  source="OBJ"    source-index="${getField1}/${getField2}"      target="FIX"   target-index="2"      use="OPT" />
+				<tag name="OBJ-STATE"     	type="STRING"  source="OBJ"    source-index="${getField1}"                   target="STATE" target-index="key1"   use="OPT" />
+				<tag name="OBJ-STATE-DYN"	type="DECIMAL"  source="OBJ"    source-index="${getField1}"                   
+											               target="STATE"  target-index="key1/${getField2}/${getField2}" use="OPT" />
+				<tag name="CONST-FIX"     	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="FIX"   target-index="100"     use="OPT" />
+				<tag name="CONST-STATE"   	type="STRING"  source="CONST"  source-index="com.hsbc.efx.common.transport.SomeConstant.CONST_A"               target="STATE" target-index="const1" use="OPT" />
+				<tag name="SCHEMA-FIX"    	type="STRING"  source="SCHEMA" source-index="Defined in Schema"              target="FIX"   target-index="20"     use="OPT" />
+				<tag name="STATE-FIX"     	type="STRING"  source="STATE"  source-index="key1"                           target="STATE" target-index="30"     use="OPT" />
+				<tag name="STATE-DYN-FIX" 	type="DECIMAL"  source="STATE"  source-index="key1/${getField2}/${getField2}" target="FIX"   target-index="31"/>
+				<tag name="OPTIONAL"      	type="DECIMAL"  source="OBJ"    source-index="${getOptional}"                 target="FIX"   target-index="40"     use="OPT" />
+				<tag name="PROHIBIT"      	type="DECIMAL"  source="OBJ"    source-index="${getProhibit}"                 target="FIX"   target-index="50"     use="PRO" />
+			</tags>
+			<on-error>
+				<tag name="CONST-OBJ" source="CONST" source-index="Const.A_CONSTANT" target="OBJ" target-index="10" use="OPT" />
+				<tag name="SCHEMA-OBJ" source="SCHEMA" source-index="Defined in Schema" target="OBJ" target-index="20" use="OPT" />
+				<tag name="STATE-OBJ" source="STATE" source-index="key1" target="STATE" target-index="30" use="OPT" />
+			</on-error>
+		</msg-map>
+		<msg-map name="sample2" source="OBJ" source-index="MsgID" source-expression="HSBC.TAPI.RFQ.REQ" target-type="R">
+			<conditions>
+				<condition source="OBJ" source-index="PdtCode" source-expression="SWP" />
+			</conditions>
+			<tags>
+				<tag name="Dummy" type="STRING" source="OBJ" source-index="${reject}" target="FIX" target-index="1" use="REQ" />
+			</tags>
+			<on-error>
+				<tag name="CONST-OBJ" source="CONST" source-index="Const.A_CONSTANT" target="FIX" target-index="10" use="OPT" />
+				<tag name="SCHEMA-OBJ" source="SCHEMA" source-index="Defined in Schema" target="FIX" target-index="20" use="OPT" />
+				<tag name="STATE-OBJ" source="STATE" source-index="key1" target="STATE" target-index="30" use="OPT" />
+			</on-error>
+		</msg-map>
+	</obj-to-fix>
+</fix-conv>

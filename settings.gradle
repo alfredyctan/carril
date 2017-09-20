@@ -1,0 +1,5 @@
+rootProject.name = 'ferrocarril-parent'
+
+include 'ferrocarril'
+include 'ferrocarril-fix-testing'
+include 'ferrocarril-fix-tag'

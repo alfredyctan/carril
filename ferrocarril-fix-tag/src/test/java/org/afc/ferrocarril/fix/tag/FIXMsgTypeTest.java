@@ -1,10 +1,6 @@
-package org.afc.ferrocarril.text;
+package org.afc.ferrocarril.fix.tag;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.text.ParseException;
-import java.util.Date;
 
 import org.afc.util.JUnit4Util;
 import org.junit.After;
@@ -13,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class UTCTimeFormatTest {
+public class FIXMsgTypeTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,15 +28,23 @@ public class UTCTimeFormatTest {
 	}
 
 	@Test
-	public void testUTCTimeFormat() {
+	public void testValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		try {
-			Date date = new UTCTimeFormat().parse("14:05:11.888");
-			assertEquals("14:05:11.888", new UTCTimeFormat().format(date));
-        } catch (ParseException e) {
-	        e.printStackTrace();
-	        fail(e.getMessage());
-        }
+		assertEquals("h", FIXMsgType.TYPE_h.id());
+		JUnit4Util.endCurrentTest(getClass());
+	}
+
+	@Test
+	public void testFromValue() {
+		JUnit4Util.startCurrentTest(getClass());
+		assertEquals(FIXMsgType.TYPE_h, FIXMsgType.fromID("h"));
+		JUnit4Util.endCurrentTest(getClass());
+	}
+
+	@Test
+	public void testToString() {
+		JUnit4Util.startCurrentTest(getClass());
+		assertEquals("h(Trading Session Status)", FIXMsgType.TYPE_h.toString());
 		JUnit4Util.endCurrentTest(getClass());
 	}
 

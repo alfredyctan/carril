@@ -1,12 +1,11 @@
 package org.afc.ferrocarril.transport;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.afc.ferrocarril.subscriber.DefaultSubscriberRegistry;
-import org.afc.ferrocarril.transport.SubjectContext;
-import org.afc.ferrocarril.transport.SubjectContextFactory;
 import org.afc.ferrocarril.transport.impl.DefaultSubjectContext;
-import org.afc.test.JUnit4Util;
+import org.afc.util.JUnit4Util;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
