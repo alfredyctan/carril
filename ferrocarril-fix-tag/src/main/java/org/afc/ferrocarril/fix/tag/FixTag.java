@@ -1,6 +1,6 @@
 package org.afc.ferrocarril.fix.tag;
 
-public enum FIXTag {
+public enum FixTag {
 
 	Account(1),
 	AvgPx(6),
@@ -160,10 +160,10 @@ public enum FIXTag {
 	
 	private static final int MAX = 10000;
 
-	private static final FIXTag[] ALL_TAGS = new FIXTag[MAX];
+	private static final FixTag[] ALL_TAGS = new FixTag[MAX];
 	
 	static {
-		for (FIXTag tag : FIXTag.values()) {
+		for (FixTag tag : FixTag.values()) {
 			ALL_TAGS[tag.id] = tag;
 		}
 	}
@@ -174,7 +174,7 @@ public enum FIXTag {
 
 	private String text;
 	
-	private FIXTag(int id) {
+	private FixTag(int id) {
 		this.id = id;
 		this.idAsString = String.valueOf(id);
 		this.text = name() + '(' + idAsString + ')'; 
@@ -188,7 +188,7 @@ public enum FIXTag {
 	    return idAsString;
     }
 
-	public static FIXTag fromID(int i) {
+	public static FixTag fromID(int i) {
 		return ALL_TAGS[i];
 	}
 

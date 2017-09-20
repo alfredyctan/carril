@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public enum FIXMsgType {
+public enum FixMsgType {
 
 	TYPE_h  ("h",   "Trading Session Status"               ),
 	TYPE_U4 ("U4",  "Initialize"                           ),
@@ -33,10 +33,10 @@ public enum FIXMsgType {
 	TYPE_0  ("0",   "Heartbeat"                            ),
 	TYPE_1  ("1",   "TestRequest"                          );
 
-	private static final Map<String, FIXMsgType> ALL_TYPES = new ConcurrentHashMap<String, FIXMsgType>();
+	private static final Map<String, FixMsgType> ALL_TYPES = new ConcurrentHashMap<String, FixMsgType>();
 	
 	static {
-		for(FIXMsgType type : FIXMsgType.values()) {
+		for(FixMsgType type : FixMsgType.values()) {
 			ALL_TYPES.put(type.id, type);
 		}
 	}	
@@ -47,13 +47,13 @@ public enum FIXMsgType {
 
 	private final String text;
 	
-	private FIXMsgType(String id, String desc) {
+	private FixMsgType(String id, String desc) {
 		this.id = id;
 		this.desc = desc;
 		this.text = id  + '(' + desc + ')';
     }
 
-    public static FIXMsgType fromID(String v) {
+    public static FixMsgType fromID(String v) {
     	return ALL_TYPES.get(v);
 	}
 

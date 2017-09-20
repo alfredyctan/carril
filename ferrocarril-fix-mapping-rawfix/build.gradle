@@ -1,0 +1,8 @@
+dependencies {
+	api project(':ferrocarril')
+
+	implementation project(':ferrocarril-fix-tag')
+	implementation project(':ferrocarril-fix-mapping')
+	testImplementation project(':ferrocarril-fix-testing')
+//	testImplementation 'com.thoughtworks.xstream:xstream:1.3.1'
+}

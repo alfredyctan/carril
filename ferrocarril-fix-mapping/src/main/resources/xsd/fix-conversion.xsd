@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.afc.org/ferrocarril/fix" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fix="http://www.afc.org/ferrocarril/fix">
+	<element name="fix-conv">
+		<complexType>
+			<sequence>
+
+				<element name="state-init" type="fix:state-init" />
+				<element name="obj-to-fix" type="fix:direction" />
+				<element name="fix-to-obj" type="fix:direction" />
+			</sequence>
+		</complexType>
+	</element>
+	<complexType name="direction">
+		<sequence>
+			<element name="msg-map" type="fix:msg-map" maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="dispatchable">
+		<sequence>
+			<element name="condition" type="fix:dispatchable" maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+		<attribute name="name" type="string" />
+		<attribute name="source" type="fix:reference" use="required" />
+		<attribute name="source-index" type="string" use="required" />
+		<attribute name="source-expression" type="string" use="required" />
+	</complexType>
+	<complexType name="msg-map">
+		<complexContent>
+			<extension base="fix:dispatchable">
+				<sequence>
+					<element name="conditions" type="fix:dispatchable" maxOccurs="1" minOccurs="0" />
+					<element name="tags" type="fix:tag" maxOccurs="1" minOccurs="1" />
+				</sequence>
+				<attribute name="target-type" type="string" use="required"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="tag">
+		<sequence>
+			<element name="tag" type="fix:tag" maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+		<attribute name="type" type="fix:type" use="required" />
+		<attribute name="source" type="fix:reference" use="required" />
+		<attribute name="source-index" type="string" use="required" />
+		<attribute name="target" type="fix:reference" use="required" />
+		<attribute name="target-index" type="string" use="required" />
+		<attribute name="use" type="fix:use" use="optional" default="OPT" />
+	</complexType>
+	<complexType name="on-error">
+		<sequence>
+			<element name="tag" type="fix:tag" maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+	</complexType>
+	<simpleType name="use">
+		<restriction base="string">
+			<enumeration value="REQ" />
+			<enumeration value="OPT" />
+			<enumeration value="BAN" />
+		</restriction>
+	</simpleType>
+	<simpleType name="reference">
+		<restriction base="string">
+			<enumeration value="CONST" />
+			<enumeration value="STATE" />
+			<enumeration value="OBJ" />
+			<enumeration value="FIX" />
+			<enumeration value="SCHEMA" />
+			<enumeration value="FIX-HEADER" />
+			<enumeration value="FIX-TRAILER" />
+		</restriction>
+	</simpleType>
+	<simpleType name="type">
+		<restriction base="string">
+			<enumeration value="INT" />
+			<enumeration value="DOUBLE" />
+			<enumeration value="BOOLEAN" />
+			<enumeration value="BYTES" />
+			<enumeration value="DECIMAL" />
+			<enumeration value="STRING" />
+			<enumeration value="DATE" />
+			<enumeration value="TIME" />
+			<enumeration value="DATETIME" />
+			<enumeration value="CHAR" />
+			<enumeration value="GROUP" />
+		</restriction>
+	</simpleType>
+	<complexType name="state-init">
+		<sequence>
+			<element name="tag" type="fix:tag" maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+	</complexType>
+</schema>

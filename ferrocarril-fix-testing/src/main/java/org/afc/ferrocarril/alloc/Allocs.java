@@ -24,7 +24,7 @@ public class Allocs implements QuickFixMessage {
 		};
 	};    
     
-    private static ThreadLocal<Map<String, AccessorMapping>> FIX_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
+    private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
 		protected Map<String, AccessorMapping> initialValue() {
 			return AccessorMapping.createAccessorMappingMap(
 				AccessorMapping.createAccessorMapping(Allocs.class, "AllocAccount", "getAllocAccount", "setAllocAccount", String.class),                                   
@@ -51,7 +51,7 @@ public class Allocs implements QuickFixMessage {
 
 	@Override
 	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return FIX_FIELDMAP.get();
+	    return Fix_FIELDMAP.get();
 	}
 	
 	@Override

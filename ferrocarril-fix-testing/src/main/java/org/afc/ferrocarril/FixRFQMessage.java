@@ -3,7 +3,7 @@ package org.afc.ferrocarril;
 import java.util.Date;
 import java.util.Map;
 
-import org.afc.ferrocarril.fix.tag.FIXTag;
+import org.afc.ferrocarril.fix.tag.FixTag;
 import org.afc.ferrocarril.message.QuickFixMessage;
 import org.afc.ferrocarril.text.UTCDatetimeFormat;
 import org.afc.ferrocarril.transport.AccessorMapping;
@@ -12,27 +12,27 @@ public class FixRFQMessage implements QuickFixMessage {
 
     private static final long serialVersionUID = -3474007340352777210L;
 
-	private static ThreadLocal<Map<String, AccessorMapping>> FIX_HEADER_MAP = new ThreadLocal<Map<String, AccessorMapping>>(){
+	private static ThreadLocal<Map<String, AccessorMapping>> Fix_HEADER_MAP = new ThreadLocal<Map<String, AccessorMapping>>(){
 		protected Map<String, AccessorMapping> initialValue() {
 			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.MsgType.name(),           "getMsgType",           "setMsgType",           String.class)
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.MsgType.name(),           "getMsgType",           "setMsgType",           String.class)
 			);
 		}
 	};
 
-	private static ThreadLocal<Map<String, AccessorMapping>> FIX_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
+	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
 		protected Map<String, AccessorMapping> initialValue() {
 			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.QuoteReqID.name(),        "getQuoteReqID",        "setQuoteReqID",        String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.IndirectCompTRate.name(), "getIndirectCompTRate", "setIndirectCompTRate", String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.NoRelatedSym.name(),      "getNoRelatedSym",      "setNoRelatedSym",      String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.Symbol.name(),            "getSymbol",            "setSymbol",            String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.SecurityType.name(),      "getSecurityType",      "setSecurityType",      String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.Currency.name(),          "getCurrency",          "setCurrency",          String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.OrderQty.name(),          "getOrderQty",          "setOrderQty",          Double.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.FutSettDate.name(),       "getFutSettDate",       "setFutSettDate",       String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.TransactTime.name(),      "getTransactTime",      "setTransactTime",      Date.class, new UTCDatetimeFormat()),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FIXTag.Account.name(),           "getAccount",           "setAccount",           String.class)
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.QuoteReqID.name(),        "getQuoteReqID",        "setQuoteReqID",        String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.IndirectCompTRate.name(), "getIndirectCompTRate", "setIndirectCompTRate", String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.NoRelatedSym.name(),      "getNoRelatedSym",      "setNoRelatedSym",      String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Symbol.name(),            "getSymbol",            "setSymbol",            String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.SecurityType.name(),      "getSecurityType",      "setSecurityType",      String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Currency.name(),          "getCurrency",          "setCurrency",          String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.OrderQty.name(),          "getOrderQty",          "setOrderQty",          Double.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.FutSettDate.name(),       "getFutSettDate",       "setFutSettDate",       String.class),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.TransactTime.name(),      "getTransactTime",      "setTransactTime",      Date.class, new UTCDatetimeFormat()),
+				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Account.name(),           "getAccount",           "setAccount",           String.class)
 			);
 		}
 	};
@@ -61,12 +61,12 @@ public class FixRFQMessage implements QuickFixMessage {
 	
 	@Override
 	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return FIX_HEADER_MAP.get();
+	    return Fix_HEADER_MAP.get();
 	}
 
 	@Override
 	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return FIX_FIELDMAP.get();
+	    return Fix_FIELDMAP.get();
 	}
 
 	@Override

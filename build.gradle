@@ -1,11 +1,17 @@
 allprojects {
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'maven'
 
 	group='org.afc.ferrocarril'
 	version='1.0.0-SNAPSHOT'
 
 	repositories {
+		maven { 
+			url "http://repo.marketcetera.org/maven" 
+		}
+		maven { 
+			url "http://central.maven.org/maven2/" 
+		}
 		mavenCentral()
 		mavenLocal()
 	}
@@ -13,8 +19,9 @@ allprojects {
 
 subprojects {
 	dependencies {
-		compile 'org.slf4j:slf4j-api:1.7.25'
-		testCompile 'junit:junit:4.12'
-		testCompile 'org.jmock:jmock-junit4:2.5.1'
+		implementation 'org.slf4j:slf4j-api:1.7.25'
+		testImplementation 'org.afc:afc-util:1.0.0-SNAPSHOT'
+		testImplementation 'junit:junit:4.12'
+		testImplementation 'org.jmock:jmock-junit4:2.5.1'
 	}
 }

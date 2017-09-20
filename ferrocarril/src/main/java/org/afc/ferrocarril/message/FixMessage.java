@@ -8,7 +8,7 @@ import org.afc.ferrocarril.transport.AccessorMapping;
 public interface FixMessage extends GenericMessage {
 	
 	/*
-	 * Context object to keep all header compulsory fields in FIX protocol 
+	 * Context object to keep all header compulsory fields in Fix protocol 
 	 */
 	public class Context {
 

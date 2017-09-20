@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class FIXTagTest {
+public class FixTagTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,7 +32,7 @@ public class FIXTagTest {
 	@Test
 	public void testValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		FIXTag tag = FIXTag.fromID(8);
+		FixTag tag = FixTag.fromID(8);
 		
 		switch (tag) {
 			case BeginString:
@@ -48,7 +48,7 @@ public class FIXTagTest {
 	public void testValueOf() {
 		JUnit4Util.startCurrentTest(getClass());
 		
-		FIXTag tag = FIXTag.valueOf("BeginString");
+		FixTag tag = FixTag.valueOf("BeginString");
 		
 		switch (tag) {
 			case BeginString:
@@ -63,7 +63,7 @@ public class FIXTagTest {
 	public void testValueOfAndThenValue() {
 		JUnit4Util.startCurrentTest(getClass());
 		
-		FIXTag tag = FIXTag.valueOf("BeginString");
+		FixTag tag = FixTag.valueOf("BeginString");
 		assertEquals(8, tag.id());
 
 		JUnit4Util.endCurrentTest(getClass());
@@ -73,7 +73,7 @@ public class FIXTagTest {
 	public void testValueNotExist() {
 		JUnit4Util.startCurrentTest(getClass());
 		
-		FIXTag tag = FIXTag.fromID(2);
+		FixTag tag = FixTag.fromID(2);
 		assertNull(tag);
 
 		JUnit4Util.endCurrentTest(getClass());
@@ -83,7 +83,7 @@ public class FIXTagTest {
 	public void testToString() {
 		JUnit4Util.startCurrentTest(getClass());
 		
-		assertEquals("BeginString(8)", FIXTag.BeginString.toString());
+		assertEquals("BeginString(8)", FixTag.BeginString.toString());
 
 		JUnit4Util.endCurrentTest(getClass());
 	}

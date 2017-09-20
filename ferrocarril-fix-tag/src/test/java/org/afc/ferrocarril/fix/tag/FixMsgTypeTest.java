@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class FIXMsgTypeTest {
+public class FixMsgTypeTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -30,21 +30,21 @@ public class FIXMsgTypeTest {
 	@Test
 	public void testValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals("h", FIXMsgType.TYPE_h.id());
+		assertEquals("h", FixMsgType.TYPE_h.id());
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testFromValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals(FIXMsgType.TYPE_h, FIXMsgType.fromID("h"));
+		assertEquals(FixMsgType.TYPE_h, FixMsgType.fromID("h"));
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testToString() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals("h(Trading Session Status)", FIXMsgType.TYPE_h.toString());
+		assertEquals("h(Trading Session Status)", FixMsgType.TYPE_h.toString());
 		JUnit4Util.endCurrentTest(getClass());
 	}
 

@@ -19,7 +19,7 @@ public class Order implements QuickFixMessage {
 		};
 	};
 
-	private static ThreadLocal<Map<String, AccessorMapping>> FIX_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>() {
+	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>() {
 		protected Map<String, AccessorMapping> initialValue() {
 			return AccessorMapping.createAccessorMappingMap(
 					AccessorMapping.createAccessorMapping(Order.class, "CIOrdID", "getCIOrdID", "setCIOrdID",
@@ -47,7 +47,7 @@ public class Order implements QuickFixMessage {
 
 	@Override
 	public Map<String, AccessorMapping> getFixMessageMap() {
-		return FIX_FIELDMAP.get();
+		return Fix_FIELDMAP.get();
 	}
 
 	@Override

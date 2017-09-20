@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="async" class="org.apache.log4j.AsyncAppender">
+		<appender-ref ref="console" />
+	</appender>
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p][%-10X{CTX}][%10.10t|%10.10c{1}] : %m%n" />
+		</layout>
+	</appender>
+
+	<root>
+		<!--all, trace, debug, info, warn, error, fatal, no-->
+		<priority value="ALL" />
+		<appender-ref ref="async" />
+	</root>
+
+	<logger name="quickfix" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+
+	<logger name="quickfixj.msg.incoming" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+
+	<logger name="quickfixj.msg.outgoing" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+
+	<logger name="quickfixj.errorEvent" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+
+	<logger name="quickfixj.event" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+
+	<logger name="quickfix.mina" additivity="false">
+		<level value="error"/>
+		<appender-ref ref="async"/>
+	</logger>
+</log4j:configuration>

@@ -1,0 +1,5 @@
+dependencies {
+	api project(':ferrocarril')
+	testImplementation project(':ferrocarril-fix-testing')
+}
+
