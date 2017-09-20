@@ -1,7 +1,7 @@
 package org.afc.ferrocarril.transport;
 
-public interface ExceptionListener<E extends TransportException> {
+public interface ExceptionListener {
 
-	public void onException(E e);
+	public <E extends TransportException> void onException(E e);
 	
 }

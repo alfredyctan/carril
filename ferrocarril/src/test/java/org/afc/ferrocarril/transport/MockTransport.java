@@ -10,6 +10,7 @@ import org.afc.ferrocarril.transport.impl.AbstractTransport;
 import org.afc.ferrocarril.transport.impl.DefaultSubjectContext;
 
 
+@SuppressWarnings("rawtypes")
 class MockTransport extends AbstractTransport {
 
 	private boolean init;
@@ -60,6 +61,7 @@ class MockTransport extends AbstractTransport {
 		}
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
     public <G extends GenericMessage> G publishRequest(String subject, GenericMessage fmtObj, Class<? extends GenericMessage> clazz,
                                         Converter<Object, GenericMessage> converter, int timeout) throws TransportException {
@@ -117,18 +119,22 @@ class MockTransport extends AbstractTransport {
     	return registry;
     }
 
+	@SuppressWarnings("unchecked")
 	public void setRegistry(SubscriberRegistry registry) {
     	this.registry = registry;
     }
 
-	public List<ExceptionListener<? extends TransportException>> getExptListeners() {
+	@SuppressWarnings("unchecked")
+	public List<ExceptionListener> getExptListeners() {
     	return exptListeners;
     }
 
-	public void setExptListeners(List<ExceptionListener<? extends TransportException>> exptListeners) {
+	@SuppressWarnings("unchecked")
+	public void setExptListeners(List<ExceptionListener> exptListeners) {
     	this.exptListeners = exptListeners;
     }
 
+	@SuppressWarnings("unchecked")
 	public Converter<Object, GenericMessage> getConverter() {
     	return converter;
     }

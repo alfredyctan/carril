@@ -4,6 +4,7 @@ import org.afc.ferrocarril.converter.Converter;
 import org.afc.ferrocarril.subscriber.AbstractSubscriber;
 import org.afc.ferrocarril.subscriber.SubscriberRegistry;
 
+@SuppressWarnings("rawtypes")
 public class MockSubscriber extends AbstractSubscriber {
 
 	public MockSubscriber() {
@@ -11,6 +12,7 @@ public class MockSubscriber extends AbstractSubscriber {
     }
 	
 	
+	@SuppressWarnings("unchecked")
 	protected MockSubscriber(SubscriberRegistry registry, String subject, TransportListener transportListener,
                                 Class clazz, Converter converter) {
 	    super(registry, subject, transportListener, clazz, converter);

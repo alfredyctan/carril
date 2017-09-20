@@ -37,7 +37,7 @@ public class DefaultSubscriberRegistryTest {
 		context.assertIsSatisfied();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
 	public void testRegisterSubjectContexts() {
 		JUnit4Util.startCurrentTest(getClass());
@@ -55,7 +55,7 @@ public class DefaultSubscriberRegistryTest {
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
 	public void testUnregisterAll() {
 		JUnit4Util.startCurrentTest(getClass());
@@ -72,6 +72,7 @@ public class DefaultSubscriberRegistryTest {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void testUnregister() {
 		JUnit4Util.startCurrentTest(getClass());
@@ -105,6 +106,7 @@ public class DefaultSubscriberRegistryTest {
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void testRegisterSubscriber() {
 		JUnit4Util.startCurrentTest(getClass());

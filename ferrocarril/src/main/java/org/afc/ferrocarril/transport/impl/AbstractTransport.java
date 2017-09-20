@@ -15,7 +15,6 @@ import org.afc.ferrocarril.transport.SubjectContextFactory;
 import org.afc.ferrocarril.transport.Transport;
 import org.afc.ferrocarril.transport.TransportException;
 import org.afc.ferrocarril.transport.TransportListener;
-import org.afc.ferrocarril.transport.Transport.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +32,12 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 
 	protected SubscriberRegistry<C> registry;
 	
-	protected List<ExceptionListener<? extends TransportException>> exptListeners;
+	protected List<ExceptionListener> exptListeners;
 
 	public AbstractTransport() {
 		this.state = State.DISPOSE;
 		this.registry = new DefaultSubscriberRegistry<C>();
-		this.exptListeners = new LinkedList<ExceptionListener<? extends TransportException>>();
+		this.exptListeners = new LinkedList<ExceptionListener>();
 		this.registry.setSubjectContextFactory(this);
 	}
 
@@ -196,17 +195,16 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 	}
 	
 	@Override
-	public void addExceptionListener(ExceptionListener<? extends TransportException> listener) {
+	public void addExceptionListener(ExceptionListener listener) {
 		synchronized(exptListeners) {
 			exptListeners.add(listener);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-    protected void fireOnException(TransportException transportException) {
+    protected void fireOnException(TransportException e) {
 		synchronized(exptListeners) {
 			for (ExceptionListener listener : exptListeners) {
-				listener.onException(transportException);
+				listener.onException(e);
 			}
 		}
 	}

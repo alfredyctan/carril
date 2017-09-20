@@ -53,6 +53,6 @@ public interface Transport{
 
 	public Object getBaseImplementation();
 	
-	public void addExceptionListener(ExceptionListener<? extends TransportException> listener);
+	public void addExceptionListener(ExceptionListener listener);
 
 }

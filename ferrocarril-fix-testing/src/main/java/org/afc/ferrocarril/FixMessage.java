@@ -47,8 +47,6 @@ public class FixMessage implements QuickFixMessage {
 		}
 	};
 
-    private Object object;
-	
     private String product;
     
     private Double rate;
