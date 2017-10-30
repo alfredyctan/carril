@@ -1,9 +1,0 @@
-dependencies {
-	api project(':ferrocarril')
-	
-	implementation project(':ferrocarril-fix-tag')
-	implementation 'org.afc:afc-util:1.0.0-SNAPSHOT'
-	
-	testImplementation project(':ferrocarril-fix-testing')
-}
-

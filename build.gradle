@@ -2,7 +2,7 @@ allprojects {
 	apply plugin: 'java-library'
 	apply plugin: 'maven'
 
-	group='org.afc.ferrocarril'
+	group='org.afc.carril'
 	version='1.0.0-SNAPSHOT'
 
 	repositories {

@@ -1,8 +1,0 @@
-dependencies {
-	
-	implementation 'org.afc:afc-util:1.0.0-SNAPSHOT'
-	
-	implementation project(':ferrocarril')
-	implementation project(':ferrocarril-fix-tag')
-}
-
