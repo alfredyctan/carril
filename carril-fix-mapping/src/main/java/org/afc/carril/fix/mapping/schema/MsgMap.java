@@ -16,10 +16,10 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="msg-map">
  *   &lt;complexContent>
- *     &lt;extension base="{http://www.afc.org/ferrocarril/fix}dispatchable">
+ *     &lt;extension base="{http://www.afc.org/carril/fix}dispatchable">
  *       &lt;sequence>
- *         &lt;element name="conditions" type="{http://www.afc.org/ferrocarril/fix}dispatchable" minOccurs="0"/>
- *         &lt;element name="tags" type="{http://www.afc.org/ferrocarril/fix}tag"/>
+ *         &lt;element name="conditions" type="{http://www.afc.org/carril/fix}dispatchable" minOccurs="0"/>
+ *         &lt;element name="tags" type="{http://www.afc.org/carril/fix}tag"/>
  *       &lt;/sequence>
  *       &lt;attribute name="target-type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/extension>

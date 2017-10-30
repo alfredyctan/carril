@@ -18,9 +18,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="state-init" type="{http://www.afc.org/ferrocarril/fix}state-init"/>
- *         &lt;element name="obj-to-fix" type="{http://www.afc.org/ferrocarril/fix}direction"/>
- *         &lt;element name="fix-to-obj" type="{http://www.afc.org/ferrocarril/fix}direction"/>
+ *         &lt;element name="state-init" type="{http://www.afc.org/carril/fix}state-init"/>
+ *         &lt;element name="obj-to-fix" type="{http://www.afc.org/carril/fix}direction"/>
+ *         &lt;element name="fix-to-obj" type="{http://www.afc.org/carril/fix}direction"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

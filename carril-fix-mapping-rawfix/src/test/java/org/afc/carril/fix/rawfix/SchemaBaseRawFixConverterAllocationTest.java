@@ -36,7 +36,7 @@ public class SchemaBaseRawFixConverterAllocationTest {
 	public void testParse() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../ferrocarril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
+			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
 			
 			String input = AllocationTestCaseFactory.createAllocationMessageForRawFix(1);
 			System.out.println("INPUT : " + input);
@@ -70,7 +70,7 @@ public class SchemaBaseRawFixConverterAllocationTest {
 	public void testFormat() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../ferrocarril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
+			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
 			
 			Allocation input = AllocationTestCaseFactory.createAllocationObjectAsInput(1);
 			System.out.println("INPUT : " + input);

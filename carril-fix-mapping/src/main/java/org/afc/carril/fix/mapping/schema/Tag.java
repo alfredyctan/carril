@@ -20,15 +20,15 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="tag" type="{http://www.afc.org/ferrocarril/fix}tag" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="tag" type="{http://www.afc.org/carril/fix}tag" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="type" use="required" type="{http://www.afc.org/ferrocarril/fix}type" />
- *       &lt;attribute name="source" use="required" type="{http://www.afc.org/ferrocarril/fix}reference" />
+ *       &lt;attribute name="type" use="required" type="{http://www.afc.org/carril/fix}type" />
+ *       &lt;attribute name="source" use="required" type="{http://www.afc.org/carril/fix}reference" />
  *       &lt;attribute name="source-index" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="target" use="required" type="{http://www.afc.org/ferrocarril/fix}reference" />
+ *       &lt;attribute name="target" use="required" type="{http://www.afc.org/carril/fix}reference" />
  *       &lt;attribute name="target-index" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="use" type="{http://www.afc.org/ferrocarril/fix}use" default="OPT" />
+ *       &lt;attribute name="use" type="{http://www.afc.org/carril/fix}use" default="OPT" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
