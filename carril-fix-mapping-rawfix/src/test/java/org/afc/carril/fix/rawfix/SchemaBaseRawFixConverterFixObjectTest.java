@@ -36,7 +36,7 @@ public class SchemaBaseRawFixConverterFixObjectTest {
 	public void testParse() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter convertor = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseRawFixConverter convertor = new SchemaBaseRawFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			String input = createRawFixMessageForParse(1);
 			System.out.println("INPUT : " + input);
 			
@@ -60,7 +60,7 @@ public class SchemaBaseRawFixConverterFixObjectTest {
 	public void testFormat() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			
 			FixObject input = FixObjectTestCaseFactory.createFixObjectForFormat(1);
 			System.out.println("INPUT : " + input);
@@ -86,7 +86,7 @@ public class SchemaBaseRawFixConverterFixObjectTest {
 	public void testParseNested() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter convertor = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseRawFixConverter convertor = new SchemaBaseRawFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			String input = createNestedMessageForParse(1);
 			
 			System.out.println("INPUT : " + input);
@@ -110,7 +110,7 @@ public class SchemaBaseRawFixConverterFixObjectTest {
 	public void testFormatNested() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseRawFixConverter fixConverter = new SchemaBaseRawFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			
 			FixObject input = FixObjectTestCaseFactory.createNestedFixObject(1);
 			System.out.println("INPUT : " + input);

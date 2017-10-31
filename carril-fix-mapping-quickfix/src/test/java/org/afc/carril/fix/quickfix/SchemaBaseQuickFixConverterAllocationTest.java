@@ -43,7 +43,7 @@ public class SchemaBaseQuickFixConverterAllocationTest {
 	public void testParse() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-allocation.xml");
 			
 			Message input = createAllocationMessage(1);
 			input.getHeader().setString(8, "Fix.4.2");
@@ -72,7 +72,7 @@ public class SchemaBaseQuickFixConverterAllocationTest {
 	public void testFormat() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-allocation.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-allocation.xml");
 			
 			Allocation input = AllocationTestCaseFactory.createAllocationObjectAsInput(1);
 			System.out.println("INPUT : " + input);

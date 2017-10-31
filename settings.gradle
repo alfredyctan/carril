@@ -1,7 +1,6 @@
 rootProject.name = 'carril-parent'
 
 include 'carril'
-include 'carril-fix-testing'
 include 'carril-fix-tag'
 include 'carril-fix-mapping'
 include 'carril-fix-mapping-rawfix'

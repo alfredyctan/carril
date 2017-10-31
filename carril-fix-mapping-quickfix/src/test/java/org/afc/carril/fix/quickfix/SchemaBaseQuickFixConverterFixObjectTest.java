@@ -45,7 +45,7 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
 	public void testParse() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 	
 			Message input = createMessage(1);
 			input.getHeader().setString(8, "Fix.4.2");
@@ -87,7 +87,7 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
 	public void testFormat() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			
 			FixObject input = FixObjectTestCaseFactory.createFixObjectForFormat(1);
 			Message expect = createMessage(1);
@@ -133,7 +133,7 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
 	public void testParseNested() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			
 			Message input = createNestedMessage(1);
 			input.getHeader().setString(8, "Fix.4.2");
@@ -162,7 +162,7 @@ public class SchemaBaseQuickFixConverterFixObjectTest {
 	public void testFormatNested() {
 		JUnit4Util.startCurrentTest(getClass());
 		try {
-			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-testing/src/main/resources/schema/conv-schema-sample-1.xml");
+			SchemaBaseQuickFixConverter fixConverter = new SchemaBaseQuickFixConverter("../carril-fix-mapping/src/test/resources/schema/conv-schema-sample-1.xml");
 			
 			FixObject input = FixObjectTestCaseFactory.createNestedFixObject(1);
 			
