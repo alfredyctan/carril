@@ -1,19 +1,20 @@
 package org.afc.carril.fix.mapping.quickfix;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import org.afc.carril.fix.mapping.Getter;
 import org.afc.carril.fix.mapping.schema.Type;
 import org.afc.carril.transport.TransportException;
 
 import quickfix.FieldMap;
 import quickfix.FieldNotFound;
-import quickfix.Group;
 
 public class QuickFixSimpleGetter implements Getter<FieldMap> {
 	
+	private static interface TypeGetter<T> {
+
+		public T get(FieldMap source) throws FieldNotFound;
+
+	}
+
 	private TypeGetter<?> getter;
 	
 	private int field;
@@ -22,37 +23,37 @@ public class QuickFixSimpleGetter implements Getter<FieldMap> {
 		field = Integer.valueOf(index);
 		switch (type) {
 			case INT:
-				getter = new IntTypeGetter();
+				getter = (source) -> source.getInt(field);
 				break;
 			case STRING:
-				getter = new StringTypeGetter();
+				getter = (source) -> source.getString(field);
 				break;
 			case DECIMAL:
-				getter = new DecimalTypeGetter();
+				getter = (source) -> source.getDecimal(field);
 				break;
 			case DOUBLE:
-				getter = new DoubleTypeGetter();
+				getter = (source) -> source.getDouble(field);
 				break;
 			case DATETIMESTAMP:
-				getter = new UTCDateTimestampTypeGetter();
+				getter = (source) -> source.getUtcTimeStamp(field);
 				break;
 			case DATETIME:
-				getter = new UTCDatetimeTypeGetter();
+				getter = (source) -> source.getUtcTimeStamp(field);
 				break;
 			case DATE:
-				getter = new UTCDateTypeGetter();
+				getter = (source) -> source.getUtcDateOnly(field);
 				break;
 			case TIME:
-				getter = new UTCTimeTypeGetter();
+				getter = (source) -> source.getUtcTimeOnly(field);
 				break;
 			case CHAR:
-				getter = new CharTypeGetter();
+				getter = (source) -> source.getChar(field);
 				break;
 			case BOOLEAN:
-				getter = new BoolTypeGetter();
+				getter = (source) -> source.getBoolean(field);
 				break;
 			case GROUP:
-				getter = new RepeatingGroupTypeGetter();
+				getter = (source) -> source.getGroups(field);
 				break;
 			default:
 				throw new TransportException("Unknown data type " + type); 
@@ -68,100 +69,6 @@ public class QuickFixSimpleGetter implements Getter<FieldMap> {
 			throw new TransportException(e.getMessage());
 		} catch (Exception e) {
 			throw new TransportException(e);
-		}
-	}
-
-	private interface TypeGetter<T> {
-
-		public T get(FieldMap source) throws FieldNotFound;
-
-	}
-
-	private class IntTypeGetter implements TypeGetter<Integer> {
-
-		@Override
-		public Integer get(FieldMap source) throws FieldNotFound {
-			return source.getInt(field);
-		}
-	}
-
-	private class BoolTypeGetter implements TypeGetter<Boolean> {
-
-		@Override
-		public Boolean get(FieldMap source) throws FieldNotFound {
-			return source.getBoolean(field);
-		}
-	}
-
-	private class CharTypeGetter implements TypeGetter<Character> {
-
-		@Override
-		public Character get(FieldMap source) throws FieldNotFound {
-			return source.getChar(field);
-		}
-	}
-
-	private class DecimalTypeGetter implements TypeGetter<BigDecimal> {
-
-		@Override
-		public BigDecimal get(FieldMap source) throws FieldNotFound {
-			return source.getDecimal(field);
-		}
-	}
-
-	private class DoubleTypeGetter implements TypeGetter<Double> {
-
-		@Override
-		public Double get(FieldMap source) throws FieldNotFound {
-			return source.getDouble(field);
-		}
-	}
-
-	private class StringTypeGetter implements TypeGetter<String> {
-
-		@Override
-		public String get(FieldMap source) throws FieldNotFound {
-			return source.getString(field);
-		}
-	}
-
-	private class UTCTimeTypeGetter implements TypeGetter<Date> {
-
-		@Override
-		public Date get(FieldMap source) throws FieldNotFound {
-			return source.getUtcTimeOnly(field);
-		}
-	}
-
-	private class UTCDateTypeGetter implements TypeGetter<Date> {
-
-		@Override
-		public Date get(FieldMap source) throws FieldNotFound {
-			return source.getUtcDateOnly(field);
-		}
-	}
-
-	private class UTCDatetimeTypeGetter implements TypeGetter<Date> {
-
-		@Override
-		public Date get(FieldMap source) throws FieldNotFound {
-			return source.getUtcTimeStamp(field);
-		}
-	}
-
-	private class UTCDateTimestampTypeGetter implements TypeGetter<Date> {
-
-		@Override
-		public Date get(FieldMap source) throws FieldNotFound {
-			return source.getUtcTimeStamp(field);
-		}
-	}
-
-	private class RepeatingGroupTypeGetter implements TypeGetter<List<Group>> {
-
-		@Override
-		public List<Group> get(FieldMap source) throws FieldNotFound {
-			return source.getGroups(field);
 		}
 	}
 }
