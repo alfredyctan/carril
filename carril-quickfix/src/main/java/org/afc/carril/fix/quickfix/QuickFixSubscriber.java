@@ -9,7 +9,7 @@ import org.afc.carril.subscriber.AbstractSubscriber;
 import org.afc.carril.subscriber.SubscriberRegistry;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
-import org.afc.util.SDC;
+import org.afc.logging.SDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

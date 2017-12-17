@@ -8,8 +8,8 @@ import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.Transport.State;
 import org.afc.carril.transport.impl.DefaultSubjectContext;
+import org.afc.logging.SDC;
 import org.afc.util.ClockUtil;
-import org.afc.util.SDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
