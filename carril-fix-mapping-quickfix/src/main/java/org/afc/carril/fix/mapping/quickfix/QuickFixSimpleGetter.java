@@ -65,7 +65,6 @@ public class QuickFixSimpleGetter implements Getter<FieldMap> {
 		try {
 			return getter.get(source);
 		} catch (FieldNotFound e) {
-			System.err.println("ATYC : " + source);
 			throw new TransportException(e.getMessage());
 		} catch (Exception e) {
 			throw new TransportException(e);
