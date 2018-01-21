@@ -2,6 +2,7 @@ package org.afc.carril.transport;
 
 import org.afc.carril.converter.Converter;
 import org.afc.carril.message.GenericMessage;
+import org.afc.carril.publisher.Publisher;
 import org.afc.carril.subscriber.Subscriber;
 
 public interface Transport{
@@ -39,6 +40,8 @@ public interface Transport{
 
 	public void unsubscribe(String subject) throws TransportException;
 
+	public Publisher registerPublisher(String subject);
+	
 	public void publish(String subject, GenericMessage message) throws TransportException;
 
 	public void publish(String subject, GenericMessage message, Converter<Object, GenericMessage> converter) throws TransportException;
@@ -53,6 +56,5 @@ public interface Transport{
 
 	public Object getBaseImplementation();
 	
-	public void addExceptionListener(ExceptionListener listener);
-
+	public void addExceptionListener(ExceptionListener exceptionListener);
 }

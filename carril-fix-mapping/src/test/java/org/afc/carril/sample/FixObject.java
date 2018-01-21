@@ -3,18 +3,18 @@ package org.afc.carril.sample;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDateFormat;
 import org.afc.carril.text.UTCDatetimeFormat;
 import org.afc.carril.text.UTCTimeFormat;
-import org.afc.carril.transport.AccessorMapping;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class FixObject implements QuickFixMessage {
+public class FixObject implements FixMessage {
 
     private static final long serialVersionUID = -3032184418199850731L;
 
@@ -42,61 +42,54 @@ public class FixObject implements QuickFixMessage {
 		};
 	};
     
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixObject.class, "MsgID",     "getMsgID",    "setMsgID",    String.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "int",       "getInteger",  "setInteger",  Integer.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "string",    "getString",   "setString",   String.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "decimal",   "getDecimal",  "setDecimal",  BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "double",    "getFloating", "setFloating", Double.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "datetime",  "getDatetime", "setDatetime", Date.class, new UTCDatetimeFormat()),
-				AccessorMapping.createAccessorMapping(FixObject.class, "date",      "getDate",     "setDate",     Date.class, new UTCDateFormat()),
-				AccessorMapping.createAccessorMapping(FixObject.class, "time",      "getTime",     "setTime",     Date.class, new UTCTimeFormat()),
-				AccessorMapping.createAccessorMapping(FixObject.class, "boolean",   "getBool",     "setBool",     Boolean.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "bytes",     "getBytes",    "setBytes",    byte[].class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "getField1",   "getField1",  "setField1",  BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "getField2",   "getField2",  "setField2",  BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "getConst",   "getConstant",  "setConstant",  String.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "getOptional", "getOptional",  "setOptional",  BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "getProhibit", "getProhibit",  "setProhibit",  BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixObject.class, "firsts",       "getFirsts",        "setFirsts",        List.class, First.class)                              
-			);
-		}
-	};
-
 	private Context context;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "firsts",      getter = "getFirsts",    setter = "setFirsts",   declare = List.class, implement = First.class)
 	private List<First> firsts;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "MsgID",       getter = "getMsgID",     setter = "setMsgID",    declare = String.class)
 	private String msgID;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "int",         getter = "getInteger",   setter = "setInteger",  declare = Integer.class)
 	private Integer integer;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "string",      getter = "getString",    setter = "setString",   declare = String.class)
 	private String string;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "decimal",     getter = "getDecimal",   setter = "setDecimal",  declare = BigDecimal.class)
 	private BigDecimal decimal;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "double",      getter = "getFloating",  setter = "setFloating", declare = Double.class)
 	private Double floating;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "datetime",    getter = "getDatetime",  setter = "setDatetime", declare = Date.class, formatter = UTCDatetimeFormat.class)
 	private Date datetime;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "date",        getter = "getDate",      setter = "setDate",     declare = Date.class, formatter = UTCDateFormat.class)
 	private Date date;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "time",        getter = "getTime",      setter = "setTime",     declare = Date.class, formatter = UTCTimeFormat.class)
 	private Date time;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "boolean",     getter = "getBool",      setter = "setBool",     declare = Boolean.class)
 	private Boolean bool;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "bytes",       getter = "getBytes",     setter = "setBytes",    declare = byte[].class)
 	private byte[] bytes;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "getField1",   getter = "getField1",    setter = "setField1",   declare = BigDecimal.class)
 	private BigDecimal field1;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "getField2",   getter = "getField2",    setter = "setField2",   declare = BigDecimal.class)
 	private BigDecimal field2;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "getConst",    getter = "getConstant",  setter = "setConstant", declare = String.class)
 	private String constant;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "getOptional", getter = "getOptional",  setter = "setOptional", declare = BigDecimal.class)
 	private BigDecimal optional;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "getProhibit", getter = "getProhibit",  setter = "setProhibit", declare = BigDecimal.class)
 	private BigDecimal prohibit;
 
 
@@ -109,21 +102,6 @@ public class FixObject implements QuickFixMessage {
 		this.context = context;
 	}
 		
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-		return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}
-	
 	public Integer getInteger() {
 		return integer;
 	}

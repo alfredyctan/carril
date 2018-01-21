@@ -1,15 +1,15 @@
 package org.afc.carril.alloc;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Allocs implements QuickFixMessage {
+public class Allocs implements FixMessage {
 
     private static final long serialVersionUID = 1898843663659201444L;
 
@@ -23,20 +23,13 @@ public class Allocs implements QuickFixMessage {
 			);
 		};
 	};    
-    
-    private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(Allocs.class, "AllocAccount", "getAllocAccount", "setAllocAccount", String.class),                                   
-				AccessorMapping.createAccessorMapping(Allocs.class, "AllocShares",  "getAllocShares",  "setAllocShares",  BigDecimal.class) 
-			);
-		}
-	};	
 	
 	private Context context;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocAccount", getter = "getAllocAccount", setter = "setAllocAccount", declare = String.class)
 	private String allocAccount;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocShares",  getter = "getAllocShares",  setter = "setAllocShares",  declare = BigDecimal.class)
 	private BigDecimal allocShares;
 	
 	@Override
@@ -47,21 +40,6 @@ public class Allocs implements QuickFixMessage {
 	@Override
 	public void setContext(Context context) {
 		this.context = context;
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
 	}
 	
 	public Allocs() {

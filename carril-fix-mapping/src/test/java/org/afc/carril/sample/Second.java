@@ -1,15 +1,15 @@
 package org.afc.carril.sample;
 
 import java.util.List;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Second implements QuickFixMessage {
+public class Second implements FixMessage {
 
     private static final long serialVersionUID = -3032184418199850731L;
 
@@ -23,19 +23,12 @@ public class Second implements QuickFixMessage {
 		};
 	};
         
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(Second.class, "secondField", "getSecondField",    "setSecondField",    String.class),
-				AccessorMapping.createAccessorMapping(Second.class, "thirds",       "getThirds",        "setThirds",        List.class, Third.class)                              
-			);
-		}
-	};
-
 	private Context context;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "secondField", getter = "getSecondField",    setter = "setSecondField",    declare = String.class)
 	private String secondField;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "thirds",      getter = "getThirds",         setter = "setThirds",         declare = List.class, implement = Third.class)
 	private List<Third> thirds;
 
 	@Override
@@ -47,21 +40,6 @@ public class Second implements QuickFixMessage {
 		this.context = context;
 	}
 		
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-		return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}
-	
 	public String getSecondField() {
     	return secondField;
     }

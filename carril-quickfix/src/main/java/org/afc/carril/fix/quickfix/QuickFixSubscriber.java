@@ -6,7 +6,7 @@ import org.afc.carril.converter.Converter;
 import org.afc.carril.message.FixMessage;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.subscriber.AbstractSubscriber;
-import org.afc.carril.subscriber.SubscriberRegistry;
+import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 import org.afc.logging.SDC;
@@ -20,7 +20,7 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixSubscriber.class);
 	
-	public QuickFixSubscriber(SubscriberRegistry<QuickFixSubjectContext> registry, String subject, TransportListener transportListener, Class<? extends FixMessage> clazz, Converter<Object, GenericMessage> converter) {
+	public QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener transportListener, Class<? extends FixMessage> clazz, Converter<Object, GenericMessage> converter) {
         super(registry, subject, transportListener, clazz, converter);
     }
 

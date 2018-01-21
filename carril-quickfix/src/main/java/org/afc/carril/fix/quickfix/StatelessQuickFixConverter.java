@@ -9,11 +9,12 @@ import java.util.Map;
 import org.afc.carril.converter.Converter;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.message.FixMessage;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDateFormat;
 import org.afc.carril.text.UTCTimeFormat;
 import org.afc.carril.transport.AccessorMapping;
 import org.afc.carril.transport.TransportException;
+import org.afc.carril.transport.util.AccessorMappingRegistry;
 import org.afc.util.ObjectUtil;
 
 import quickfix.FieldMap;
@@ -21,24 +22,24 @@ import quickfix.Group;
 import quickfix.Message;
 import quickfix.Message.Header;
 
-public class StatelessQuickFixConverter implements Converter<Message, QuickFixMessage> {
+public class StatelessQuickFixConverter implements Converter<Message, FixMessage> {
 
 	@Override
-	public QuickFixMessage parse(Message object, Class<? extends QuickFixMessage> clazz) throws TransportException {
+	public FixMessage parse(Message object, Class<? extends FixMessage> clazz) throws TransportException {
 		return parseMessage(object, clazz);
 	}
 
-	public QuickFixMessage parseMessage(Message message, Class<? extends QuickFixMessage> clazz) throws TransportException {
+	public FixMessage parseMessage(Message message, Class<? extends FixMessage> clazz) throws TransportException {
         try {
-	        QuickFixMessage fixFormat = (QuickFixMessage)clazz.newInstance();
+	        FixMessage fixFormat = (FixMessage)clazz.newInstance();
 	        FieldMap header = message.getHeader();
-	        parseFieldMap(header, fixFormat, fixFormat.getFixHeaderMap());
+	        parseFieldMap(header, fixFormat, AccessorMappingRegistry.getFixHeaderMapping(fixFormat));
 
-	        parseFieldMap(message, fixFormat, fixFormat.getFixMessageMap());
+	        parseFieldMap(message, fixFormat, AccessorMappingRegistry.getFixBodyMapping(fixFormat));
 
 	        FieldMap trailer = message.getTrailer();
-	        parseFieldMap(trailer, fixFormat, fixFormat.getFixTrailerMap());
-
+	        parseFieldMap(trailer, fixFormat, AccessorMappingRegistry.getFixTrailerMapping(fixFormat));
+	        
 	        fixFormat.setContext(
 	        	new FixMessage.Context(
 	        		header.getString(FixTag.BeginString.id()),
@@ -59,7 +60,7 @@ public class StatelessQuickFixConverter implements Converter<Message, QuickFixMe
         }
 	}
 
-    public void parseFieldMap(FieldMap message, QuickFixMessage fixFormat, Map<String, AccessorMapping> mappings) throws TransportException {
+    public void parseFieldMap(FieldMap message, FixMessage fixFormat, Map<String, AccessorMapping> mappings) throws TransportException {
 
 		if (mappings == null) {
 			return;
@@ -97,10 +98,10 @@ public class StatelessQuickFixConverter implements Converter<Message, QuickFixMe
 						mapping.getSetMethod().invoke(fixFormat, message.getUtcTimeStamp(tagID));
 					}
 				} else if (List.class.equals(declareClass)) {
-					List<QuickFixMessage> lists  = new LinkedList<QuickFixMessage>();
+					List<FixMessage> lists  = new LinkedList<FixMessage>();
 					for (Group group : message.getGroups(tagID)) {
-						QuickFixMessage format = ObjectUtil.<Class<QuickFixMessage>>cast(mapping.getImplClass()).newInstance();
-						parseFieldMap(group, format, format.getFixMessageMap());
+						FixMessage format = ObjectUtil.<Class<FixMessage>>cast(mapping.getImplClass()).newInstance();
+						parseFieldMap(group, format, AccessorMappingRegistry.getFixBodyMapping(format));
 						lists.add(format);
 					}
 					mapping.getSetMethod().invoke(fixFormat, lists);
@@ -118,12 +119,12 @@ public class StatelessQuickFixConverter implements Converter<Message, QuickFixMe
 	}
 
 	@Override
-	public Message format(QuickFixMessage object) throws TransportException {
-		QuickFixMessage fixFormat = (QuickFixMessage)object;
+	public Message format(FixMessage object) throws TransportException {
+		FixMessage fixFormat = (FixMessage)object;
 		return formatMessage(fixFormat);
 	}
 
-	private Message formatMessage(QuickFixMessage fixFormat) throws TransportException {
+	private Message formatMessage(FixMessage fixFormat) throws TransportException {
 		Message message = new Message();
 		
 		Header header = message.getHeader();
@@ -135,14 +136,14 @@ public class StatelessQuickFixConverter implements Converter<Message, QuickFixMe
 		header.setInt(FixTag.MsgSeqNum.id(), fixFormat.getContext().getMsgSeqNum());
 		header.setUtcTimeStamp(FixTag.SendingTime.id(), fixFormat.getContext().getSendingTime(), true);
 		
-		formatFieldMap(fixFormat, message.getHeader(), fixFormat.getFixHeaderMap());
-		formatFieldMap(fixFormat, message, fixFormat.getFixMessageMap());
-		formatFieldMap(fixFormat, message.getTrailer(), fixFormat.getFixTrailerMap());
+		formatFieldMap(fixFormat, message.getHeader(), AccessorMappingRegistry.getFixHeaderMapping(fixFormat));
+		formatFieldMap(fixFormat, message, AccessorMappingRegistry.getFixBodyMapping(fixFormat));
+		formatFieldMap(fixFormat, message.getTrailer(), AccessorMappingRegistry.getFixTrailerMapping(fixFormat));
 		
 		return message;
 	}
 
-    private void formatFieldMap(QuickFixMessage fixFormat, FieldMap fieldMap, Map<String, AccessorMapping> mappings) throws TransportException {
+    private void formatFieldMap(FixMessage fixFormat, FieldMap fieldMap, Map<String, AccessorMapping> mappings) throws TransportException {
 		if (mappings == null) {
 			return ;
 		}
@@ -182,10 +183,10 @@ public class StatelessQuickFixConverter implements Converter<Message, QuickFixMe
 						fieldMap.setUtcTimeStamp(tagID, (Date)value, true);
 					}
 				} else if (List.class.equals(declareClass)) {
-					List<QuickFixMessage> lists  = ObjectUtil.<List<QuickFixMessage>>cast(value); 
-					for (QuickFixMessage subQuickFixFormat: lists) {
+					List<FixMessage> lists  = ObjectUtil.<List<FixMessage>>cast(value); 
+					for (FixMessage subQuickFixFormat: lists) {
 						Group group = new Group(tagID, 0);
-						formatFieldMap(subQuickFixFormat, group, subQuickFixFormat.getFixMessageMap());
+						formatFieldMap(subQuickFixFormat, group, AccessorMappingRegistry.getFixBodyMapping(subQuickFixFormat));
 						fieldMap.addGroup(group);
 					}
 				} else {

@@ -1,14 +1,13 @@
 package org.afc.carril.sample;
 
-import java.util.Map;
-
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Third implements QuickFixMessage {
+public class Third implements FixMessage {
 
     private static final long serialVersionUID = -3032184418199850731L;
 
@@ -20,17 +19,10 @@ public class Third implements QuickFixMessage {
 			);
 		};
 	};
-	
-    private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(Third.class, "thirdField", "getThirdField",    "setThirdField",    String.class)
-			);
-		}
-	};
 
 	private Context context;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "thirdField", getter = "getThirdField",    setter = "setThirdField",    declare = String.class)
 	private String thirdField;
 
 	@Override
@@ -42,21 +34,6 @@ public class Third implements QuickFixMessage {
 		this.context = context;
 	}
 		
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-		return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}
-	
 	public String getThirdField() {
     	return thirdField;
     }

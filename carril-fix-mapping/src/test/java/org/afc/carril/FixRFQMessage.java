@@ -1,50 +1,44 @@
 package org.afc.carril;
 
 import java.util.Date;
-import java.util.Map;
 
-import org.afc.carril.fix.tag.FixTag;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDatetimeFormat;
-import org.afc.carril.transport.AccessorMapping;
 
-public class FixRFQMessage implements QuickFixMessage {
+public class FixRFQMessage implements FixMessage {
 
     private static final long serialVersionUID = -3474007340352777210L;
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_HEADER_MAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.MsgType.name(),           "getMsgType",           "setMsgType",           String.class)
-			);
-		}
-	};
+    @AnnotatedMapping(wire = Wire.Fix, name = "MsgType", getter = "getMsgType", setter = "setMsgType", declare = String.class)
+	private String msgType; // 35=R
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.QuoteReqID.name(),        "getQuoteReqID",        "setQuoteReqID",        String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.NoRelatedSym.name(),      "getNoRelatedSym",      "setNoRelatedSym",      String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Symbol.name(),            "getSymbol",            "setSymbol",            String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.SecurityType.name(),      "getSecurityType",      "setSecurityType",      String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Currency.name(),          "getCurrency",          "setCurrency",          String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.OrderQty.name(),          "getOrderQty",          "setOrderQty",          Double.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.FutSettDate.name(),       "getFutSettDate",       "setFutSettDate",       String.class),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.TransactTime.name(),      "getTransactTime",      "setTransactTime",      Date.class, new UTCDatetimeFormat()),
-				AccessorMapping.createAccessorMapping(FixRFQMessage.class, FixTag.Account.name(),           "getAccount",           "setAccount",           String.class)
-			);
-		}
-	};
-
-    private String msgType; // 35=R
+	@AnnotatedMapping(wire = Wire.Fix, name = "QuoteReqID", getter = "getQuoteReqID", setter = "setQuoteReqID", declare = String.class)
 	private String quoteReqID; // 131=getrate_FF_1
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "NoRelatedSym", getter = "getNoRelatedSym", setter = "setNoRelatedSym", declare = String.class)
 	private String noRelatedSym; // 146=1
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "Symbol", getter = "getSymbol", setter = "setSymbol", declare = String.class)
 	private String symbol; // 55=USD/JPY
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "SecurityType", getter = "getSecurityType", setter = "setSecurityType", declare = String.class)
 	private String securityType; // 167=FOR
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "Currency", getter = "getCurrency", setter = "setCurrency", declare = String.class)
 	private String currency; // 15=USD
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "OrderQty", getter = "getOrderQty", setter = "setOrderQty", declare = Double.class)
 	private Double orderQty; // 38=10
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "FutSettDate", getter = "getFutSettDate", setter = "setFutSettDate", declare = String.class)
 	private String futSettDate; // 64=SPT
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "TransactTime", getter = "getTransactTime", setter = "setTransactTime", declare = Date.class, formatter = UTCDatetimeFormat.class)
 	private Date transactTime; // 60=20071111-22:06:33.162
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "Account", getter = "getAccount", setter = "setAccount", declare = String.class)
 	private String account; // 1=CIBHKH
 
 	private Context context;
@@ -57,21 +51,6 @@ public class FixRFQMessage implements QuickFixMessage {
     	this.context = context;
     }	
 	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return Fix_HEADER_MAP.get();
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return Fix_FIELDMAP.get();
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}
-
 	public void setMsgType(String msgType) {
 		this.msgType = msgType;
 	}

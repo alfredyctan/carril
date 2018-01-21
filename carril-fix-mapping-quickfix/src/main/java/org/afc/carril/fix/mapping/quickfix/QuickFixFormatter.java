@@ -12,12 +12,11 @@ import org.afc.carril.fix.mapping.schema.Direction;
 import org.afc.carril.fix.mapping.schema.MsgMap;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.message.FixMessage;
-import org.afc.carril.message.QuickFixMessage;
 import org.afc.carril.transport.TransportException;
 
 import quickfix.Message;
 
-public class QuickFixFormatter implements FixFormatter<QuickFixMessage, Message> {
+public class QuickFixFormatter implements FixFormatter<FixMessage, Message> {
 
 	private List<MsgMapper<FixMessage, Message>> mappers;
 	
@@ -38,7 +37,7 @@ public class QuickFixFormatter implements FixFormatter<QuickFixMessage, Message>
 	
 	
 	@Override
-	public Message format(QuickFixMessage fixFormat) {
+	public Message format(FixMessage fixFormat) {
         try {
     		Message message = new Message();
     		for (MsgMapper<FixMessage, Message> msgMapper : mappers) {

@@ -1,15 +1,15 @@
 package org.afc.carril.alloc;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Execs implements QuickFixMessage {
+public class Execs implements FixMessage {
 
     private static final long serialVersionUID = -1182971755817007002L;
 
@@ -25,22 +25,15 @@ public class Execs implements QuickFixMessage {
 		};
 	};    
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(Execs.class, "LastShares", "getLastShares", "setLastShares", BigDecimal.class),                                   
-				AccessorMapping.createAccessorMapping(Execs.class, "ExecID",     "getExecID",     "setExecID",     String.class),                                   
-				AccessorMapping.createAccessorMapping(Execs.class, "LastPx",     "getLastPx",     "setLastPx",     BigDecimal.class) 
-			);
-		}
-	};	
-	
 	private Context context;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "LastShares", getter = "getLastShares", setter = "setLastShares", declare = BigDecimal.class)
 	private BigDecimal lastShares;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "ExecID",     getter = "getExecID",     setter = "setExecID",     declare = String.class)
 	private String execID;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "LastPx",     getter = "getLastPx",     setter = "setLastPx",     declare = BigDecimal.class)
 	private BigDecimal lastPx;
 	
 	
@@ -54,20 +47,6 @@ public class Execs implements QuickFixMessage {
 		this.context = context;
 	}
 
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}	
 	public Execs() {
     }
 	

@@ -3,70 +3,49 @@ package org.afc.carril;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.afc.carril.fix.tag.FixTag;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Section;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDateFormat;
 import org.afc.carril.text.UTCDatetimeFormat;
 import org.afc.carril.text.UTCTimeFormat;
-import org.afc.carril.transport.AccessorMapping;
 
-public class FixBaseMessage implements QuickFixMessage {
+public class FixBaseMessage implements FixMessage {
 
     private static final long serialVersionUID = -3474007340352777210L;
+   
+	@AnnotatedMapping(wire = Wire.Fix, name = "Product", getter = "getProduct", setter = "setProduct", declare = String.class)
+	private String product;
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_HEADER_MAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.MsgType.name(), "getMsgType", "setMsgType", String.class),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.TransactTime.name(), "getTradeTime",   "setTradeTime",   Date.class, new UTCTimeFormat())
-			);
-		}
-	};
+	@AnnotatedMapping(wire = Wire.Fix, name = "Price", getter = "getRate", setter = "setRate", declare = Double.class)
+	private Double rate;
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.OrderQty.name(),     "getAmount",      "setAmount",      BigDecimal.class),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.Price.name(),     "getRate", "setRate", Double.class),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.FutSettDate.name(), "getValueDate",   "setValueDate",   Date.class, new UTCDateFormat()),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.TradeDate.name(), "getTradeDate",   "setTradeDate",   Date.class, new UTCDatetimeFormat()),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.Product.name(),     "getProduct",     "setProduct",     String.class),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.NoOrder.name(), "getMessages",   "setMessages",   List.class, FixBaseMessage.class),
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.LinesOfText.name(), "getLists",   "setLists",   List.class, FixBaseMessage.class)
-			);
-		}
-	};
+	@AnnotatedMapping(wire = Wire.Fix, name = "OrderQty", getter = "getAmount", setter = "setAmount", declare = BigDecimal.class)
+	private BigDecimal amount;
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_TRAILER_MAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(FixBaseMessage.class, FixTag.CIOrdID.name(),     "getReferenceID", "setReferenceID", Integer.class)
-			);
-		}
-	};
+	@AnnotatedMapping(wire = Wire.Fix, section = Section.Header, name = "MsgType", getter = "getMsgType", setter = "setMsgType", declare = String.class)
+	private String msgType;
 
-    private String product;
-    
-    private Double rate;
+	@AnnotatedMapping(wire = Wire.Fix, section = Section.Trailer, name = "CIOrdID", getter = "getReferenceID", setter = "setReferenceID", declare = Integer.class)
+	private Integer referenceID;
 
-    private BigDecimal amount;
+	@AnnotatedMapping(wire = Wire.Fix, name = "FutSettDate", getter = "getValueDate", setter = "setValueDate", declare = Date.class, formatter = UTCDateFormat.class)
+	private Date valueDate;
 
-    private String msgType ;
+	@AnnotatedMapping(wire = Wire.Fix, name = "TradeDate", getter = "getTradeDate", setter = "setTradeDate", declare = Date.class, formatter = UTCDatetimeFormat.class)
+	private Date tradeDate;
 
-    private Integer referenceID;
+	@AnnotatedMapping(wire = Wire.Fix, section = Section.Header, name = "TransactTime", getter = "getTradeTime", setter = "setTradeTime", declare = Date.class, formatter = UTCTimeFormat.class)
+	private Date tradeTime;
 
-    private Date valueDate;
+	@AnnotatedMapping(wire = Wire.Fix, name = "NoOrder", getter = "getMessages", setter = "setMessages", declare = List.class, implement = FixBaseMessage.class)
+	private List<FixBaseMessage> messages;
 
-    private Date tradeDate;
-
-    private Date tradeTime;
-
-    private List<FixBaseMessage> messages;
-
-    private List<FixBaseMessage> lists;
-    
+	@AnnotatedMapping(wire = Wire.Fix, name = "LinesOfText", getter = "getLists", setter = "setLists", declare = List.class, implement = FixBaseMessage.class)
+	private List<FixBaseMessage> lists;
+  
 	private Context context;
 	
 	public Context getContext() {
@@ -77,20 +56,6 @@ public class FixBaseMessage implements QuickFixMessage {
     	this.context = context;
     }	
 
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return Fix_HEADER_MAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return Fix_TRAILER_MAP.get();
-	}
 
 	public String getProduct() {
     	return product;

@@ -1,15 +1,15 @@
 package org.afc.carril.sample;
 
 import java.util.List;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class First implements QuickFixMessage {
+public class First implements FixMessage {
 
     private static final long serialVersionUID = -3032184418199850731L;
 
@@ -23,20 +23,13 @@ public class First implements QuickFixMessage {
 			);
 		};
 	};
-        
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(First.class, "firstField", "getFirstField",    "setFirstField",    String.class),
-				AccessorMapping.createAccessorMapping(First.class, "seconds",       "getSeconds",        "setSeconds",        List.class, Second.class)                              
-			);
-		}
-	};
 
 	private Context context;
-	
+
+	@AnnotatedMapping(wire = Wire.Fix, name = "firstField",    getter = "getFirstField",    setter = "setFirstField",    declare = String.class)
 	private String firstField;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "seconds",       getter = "getSeconds",       setter = "setSeconds",       declare = List.class, implement = Second.class)
 	private List<Second> seconds;
 
 	@Override
@@ -48,21 +41,6 @@ public class First implements QuickFixMessage {
 		this.context = context;
 	}
 		
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-		return Fix_FIELDMAP.get();
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
-	}
-	
 	public String getFirstField() {
     	return firstField;
     }

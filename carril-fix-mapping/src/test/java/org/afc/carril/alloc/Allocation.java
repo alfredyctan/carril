@@ -3,18 +3,18 @@ package org.afc.carril.alloc;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDateFormat;
 import org.afc.carril.text.UTCDateTimestampFormat;
-import org.afc.carril.transport.AccessorMapping;
 import org.afc.util.DateUtil;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Allocation implements QuickFixMessage {
+public class Allocation implements FixMessage {
 
     private static final long serialVersionUID = 5318146244813281884L;
 
@@ -52,91 +52,85 @@ public class Allocation implements QuickFixMessage {
 		};
 	};    
     
-    private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>(){
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-				AccessorMapping.createAccessorMapping(Allocation.class, "MsgID",         "getMsgID",          "setMsgID",        String.class),                                   
-				AccessorMapping.createAccessorMapping(Allocation.class, "ProductType",   "getProductType",    "setProductType",    String.class),                                   
-				AccessorMapping.createAccessorMapping(Allocation.class, "AllocID",       "getAllocID",        "setAllocID",        String.class),                                   
-				AccessorMapping.createAccessorMapping(Allocation.class, "AllocTransType","getAllocTransType", "setAllocTransType", Character.class),                                  
-				AccessorMapping.createAccessorMapping(Allocation.class, "AllocLinkID",   "getAllocLinkID",    "setAllocLinkID",    String.class),                                  
-				AccessorMapping.createAccessorMapping(Allocation.class, "AllocLinkType", "getAllocLinkType",  "setAllocLinkType",  Integer.class),                              
-				AccessorMapping.createAccessorMapping(Allocation.class, "SenderSubID",   "getSenderSubID",    "setSenderSubID",    String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "Uuid",          "getUUID",           "setUUID",           String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "NoOrder",       "getNoOrder",        "setNoOrder",        List.class, Order.class),                              
-				AccessorMapping.createAccessorMapping(Allocation.class, "NoExecs",       "getNoExecs",        "setNoExecs",        List.class, Execs.class),                              
-				AccessorMapping.createAccessorMapping(Allocation.class, "Side",          "getSide",           "setSide",           Character.class),                            
-				AccessorMapping.createAccessorMapping(Allocation.class, "Symbol",        "getSymbol",         "setSymbol",         String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "SecurityID",    "getSecurityID",     "setSecurityID",     String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "IdSource",      "getIdSource",       "setIdSource",       String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "Product",       "getProduct",        "setProduct",        Integer.class),                              
-				AccessorMapping.createAccessorMapping(Allocation.class, "CFICode",       "getCFICode",        "setCFICode",        String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "Shares",        "getShares",         "setShares",         BigDecimal.class),                           
-				AccessorMapping.createAccessorMapping(Allocation.class, "AvgPx",         "getAvgPx",          "setAvgPx",          BigDecimal.class),                           
-				AccessorMapping.createAccessorMapping(Allocation.class, "Currency",      "getCurrency",       "setCurrency",       String.class),                               
-				AccessorMapping.createAccessorMapping(Allocation.class, "SettlementType","getSettlementType", "setSettlementType", Character.class),                
-				AccessorMapping.createAccessorMapping(Allocation.class, "FutSettDate",   "getFutSettDate",    "setFutSettDate",    Date.class, new UTCDateFormat()),                
-				AccessorMapping.createAccessorMapping(Allocation.class, "NoAllocs",      "getNoAllocs",       "setNoAllocs",       List.class, Allocs.class),                              
-				AccessorMapping.createAccessorMapping(Allocation.class, "NetMoney",      "getNetMoney",       "setNetMoney",       BigDecimal.class),                                  
-				AccessorMapping.createAccessorMapping(Allocation.class, "TradeDate",     "getTradeDate",      "setTradeDate",      Date.class, new UTCDateFormat()),                                  
-				AccessorMapping.createAccessorMapping(Allocation.class, "TransactTime",  "getTransactTime",   "setTransactTime",   Date.class, new UTCDateTimestampFormat()),                                  
-				AccessorMapping.createAccessorMapping(Allocation.class, "Text",          "getText",           "setText",           String.class) 
-			);
-		}
-	};	
 
 	private Context context;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "MsgID",          getter = "getMsgID",          setter = "setMsgID",          declare = String.class)
 	private String msgID;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "ProductType",    getter = "getProductType",    setter = "setProductType",    declare = String.class)
 	private String productType;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocID",        getter = "getAllocID",        setter = "setAllocID",        declare = String.class)
 	private String allocID;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocTransType", getter = "getAllocTransType", setter = "setAllocTransType", declare = Character.class)
 	private Character allocTransType;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocLinkID",    getter = "getAllocLinkID",    setter = "setAllocLinkID",    declare = String.class)
 	private String allocLinkID;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "AllocLinkType",  getter = "getAllocLinkType",  setter = "setAllocLinkType",  declare = Integer.class)
 	private Integer allocLinkType;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "SenderSubID",    getter = "getSenderSubID",    setter = "setSenderSubID",    declare = String.class)
 	private String senderSubID;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Uuid",           getter = "getUUID",           setter = "setUUID",           declare = String.class)
 	private String uuid;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "NoOrder",        getter = "getNoOrder",        setter = "setNoOrder",        declare = List.class, implement = Order.class)
 	private List<Order> noOrder;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "NoExecs",        getter = "getNoExecs",        setter = "setNoExecs",        declare = List.class, implement = Execs.class)
 	private List<Execs> noExecs;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Side",           getter = "getSide",           setter = "setSide",           declare = Character.class)
 	private Character side;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Symbol",         getter = "getSymbol",         setter = "setSymbol",         declare = String.class)
 	private String symbol;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "SecurityID",     getter = "getSecurityID",     setter = "setSecurityID",     declare = String.class)
 	private String securityID;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "IdSource",       getter = "getIdSource",       setter = "setIdSource",       declare = String.class)
 	private String idSource;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Product",        getter = "getProduct",        setter = "setProduct",        declare = Integer.class)
 	private Integer product;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "CFICode",        getter = "getCFICode",        setter = "setCFICode",        declare = String.class)
 	private String cfiCode;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Shares",         getter = "getShares",         setter = "setShares",         declare = BigDecimal.class)
 	private BigDecimal shares;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "AvgPx",          getter = "getAvgPx",          setter = "setAvgPx",          declare = BigDecimal.class)
 	private BigDecimal avgPx;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Currency",       getter = "getCurrency",       setter = "setCurrency",       declare = String.class)
 	private String currency;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "SettlementType", getter = "getSettlementType", setter = "setSettlementType", declare = Character.class)
 	private Character settlementType;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "FutSettDate",    getter = "getFutSettDate",    setter = "setFutSettDate",    declare = Date.class, implement = UTCDateFormat.class)
 	private Date futSettDate;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "NoAllocs",       getter = "getNoAllocs",       setter = "setNoAllocs",       declare = List.class, implement = Allocs.class)
 	private List<Allocs> noAllocs;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "NetMoney",       getter = "getNetMoney",       setter = "setNetMoney",       declare = BigDecimal.class)
 	private BigDecimal netMoney;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "TradeDate",      getter = "getTradeDate",      setter = "setTradeDate",      declare = Date.class, implement = UTCDateFormat.class)
 	private Date tradeDate;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "TransactTime",   getter = "getTransactTime",   setter = "setTransactTime",   declare = Date.class, implement = UTCDateTimestampFormat.class)
 	private Date transactTime;
 	
+	@AnnotatedMapping(wire = Wire.Fix, name = "Text",           getter = "getText",           setter = "setText",           declare = String.class)
 	private String text;
 	
 	@Override
@@ -147,22 +141,6 @@ public class Allocation implements QuickFixMessage {
 	@Override
 	public void setContext(Context context) {
 		this.context = context;
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-	    return Fix_FIELDMAP.get();
-	}
-
-	
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-	    return null;
-	}
-	
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-	    return null;
 	}
 
 	public Allocation() {

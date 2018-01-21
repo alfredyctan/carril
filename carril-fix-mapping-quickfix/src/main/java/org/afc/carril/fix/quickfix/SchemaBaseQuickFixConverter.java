@@ -15,7 +15,7 @@ import org.afc.carril.fix.mapping.impl.SimpleSessionState;
 import org.afc.carril.fix.mapping.quickfix.QuickFixFormatter;
 import org.afc.carril.fix.mapping.quickfix.QuickFixParser;
 import org.afc.carril.fix.mapping.schema.FixConv;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.transport.TransportException;
 import org.afc.util.ObjectUtil;
 import org.codehaus.plexus.util.IOUtil;
@@ -24,15 +24,15 @@ import org.slf4j.LoggerFactory;
 
 import quickfix.Message;
 
-public class SchemaBaseQuickFixConverter implements Converter<Message, QuickFixMessage> {
+public class SchemaBaseQuickFixConverter implements Converter<Message, FixMessage> {
 
 	private static Logger logger = LoggerFactory.getLogger(SchemaBaseQuickFixConverter.class);
 	
 	private FixConv fixConv;
 
-	private FixParser<Message, QuickFixMessage> fixParser;
+	private FixParser<Message, FixMessage> fixParser;
 
-	private FixFormatter<QuickFixMessage, Message> fixFormatter;
+	private FixFormatter<FixMessage, Message> fixFormatter;
 	
 	private SessionState state;
 	
@@ -65,17 +65,17 @@ public class SchemaBaseQuickFixConverter implements Converter<Message, QuickFixM
 	}
 
     @Override
-	public QuickFixMessage parse(Message object, Class<? extends QuickFixMessage> clazz) throws TransportException {
+	public FixMessage parse(Message object, Class<? extends FixMessage> clazz) throws TransportException {
 		try {
 			Message message = (Message)object;
-	        return fixParser.parse(message, ObjectUtil.<Class<QuickFixMessage>>cast(clazz));
+	        return fixParser.parse(message, ObjectUtil.<Class<FixMessage>>cast(clazz));
         } catch (Exception e) {
 			throw new TransportException ("Fail to parse quickfix message.", e);
         }
 	}
 
 	@Override
-	public Message format(QuickFixMessage object) throws TransportException {
+	public Message format(FixMessage object) throws TransportException {
 	    return fixFormatter.format(object);
 	}
 }

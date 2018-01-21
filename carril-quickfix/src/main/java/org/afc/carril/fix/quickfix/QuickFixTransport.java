@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import org.afc.carril.converter.Converter;
 import org.afc.carril.message.FixMessage;
 import org.afc.carril.message.GenericMessage;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.publisher.Publisher;
 import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
@@ -16,9 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.ConfigError;
-import quickfix.Message;
-import quickfix.Session;
-import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 
 public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext> {
@@ -45,7 +42,7 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 
 	@Override
 	protected void doStart() {
-		for (QuickFixSubjectContext subjectContext : registry.allSubjectContexts()) {
+		for (QuickFixSubjectContext subjectContext : registry.getSubjectContexts()) {
 			try {
 	            subjectContext.start();
             } catch (Exception e) {
@@ -56,7 +53,7 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 
 	@Override
 	protected void doStop() {
-		for (QuickFixSubjectContext subjectContext : registry.allSubjectContexts()) {
+		for (QuickFixSubjectContext subjectContext : registry.getSubjectContexts()) {
 			try {
 				subjectContext.stop();
             } catch (Exception e) {
@@ -74,36 +71,14 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 		return null;
 	}
 
-	@Override
-	public void publish(String subject, GenericMessage fmtObj, Converter<Object, GenericMessage> converter) throws TransportException {
-		try {
-			QuickFixSubjectContext application = registry.getSubjectContext(subject);
-			QuickFixMessage fixFormat = ObjectUtil.<QuickFixMessage>cast(fmtObj);
-	        fixFormat.setContext(
-	        	new FixMessage.Context(
-		        	application.getSessionID().getBeginString(),
-		        	application.getSessionID().getSenderCompID(),
-		        	application.getSessionID().getTargetCompID()
-		        )
-	        );
-			Message message = (Message)converter.format(fmtObj);
-	        Session.sendToTarget(message, application.getSessionID());
-		} catch (SessionNotFound e) {
-        	throw new TransportException("fail to send message. ", e);
-        }
-	}
-		
-	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message,
-			Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter, int timeout)
-			throws TransportException {
-		publish(subject, message, converter);
-		return null;
-	}
-	
     @Override
 	public Subscriber createSubscriber(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
     	return new QuickFixSubscriber(registry, subject, transportListener, ObjectUtil.<Class<? extends FixMessage>>cast(clazz), converter);
+	}
+
+	@Override
+	public Publisher createPublisher(String subject) {
+		return new QuickFixPublisher(registry, subject, null, null, converter);
 	}
 
     @Override

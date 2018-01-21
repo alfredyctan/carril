@@ -66,10 +66,8 @@ public interface FixMessage extends GenericMessage {
         }
 	}
 
-
 	public void setContext(Context context);
 	
 	public Context getContext();
 	
-	public Map<String, AccessorMapping> getFixMessageMap();
 }

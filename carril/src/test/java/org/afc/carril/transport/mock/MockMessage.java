@@ -1,4 +1,4 @@
-package org.afc.carril.transport;
+package org.afc.carril.transport.mock;
 
 import org.afc.carril.message.GenericMessage;
 

@@ -1,14 +1,13 @@
 package org.afc.carril.alloc;
 
-import java.util.Map;
-
-import org.afc.carril.message.QuickFixMessage;
-import org.afc.carril.transport.AccessorMapping;
+import org.afc.carril.annotation.AnnotatedMapping;
+import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.message.FixMessage;
 import org.afc.util.ObjectComparator;
 import org.afc.util.ObjectComparator.Member;
 import org.afc.util.StringUtil;
 
-public class Order implements QuickFixMessage {
+public class Order implements FixMessage {
 
 	private static final long serialVersionUID = 5900916430929110415L;
 
@@ -19,20 +18,12 @@ public class Order implements QuickFixMessage {
 		};
 	};
 
-	private static ThreadLocal<Map<String, AccessorMapping>> Fix_FIELDMAP = new ThreadLocal<Map<String, AccessorMapping>>() {
-		protected Map<String, AccessorMapping> initialValue() {
-			return AccessorMapping.createAccessorMappingMap(
-					AccessorMapping.createAccessorMapping(Order.class, "CIOrdID", "getCIOrdID", "setCIOrdID",
-							String.class),
-					AccessorMapping.createAccessorMapping(Order.class, "SecondaryOrderID", "getSecondaryOrderID",
-							"setSecondaryOrderID", String.class));
-		}
-	};
-
 	private Context context;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "CIOrdID",          getter = "getCIOrdID",          setter = "setCIOrdID",          declare = String.class)
 	private String ciOrdID;
 
+	@AnnotatedMapping(wire = Wire.Fix, name = "SecondaryOrderID", getter = "getSecondaryOrderID", setter = "setSecondaryOrderID", declare = String.class)
 	private String secondaryOrderID;
 
 	@Override
@@ -43,21 +34,6 @@ public class Order implements QuickFixMessage {
 	@Override
 	public void setContext(Context context) {
 		this.context = context;
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixMessageMap() {
-		return Fix_FIELDMAP.get();
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixHeaderMap() {
-		return null;
-	}
-
-	@Override
-	public Map<String, AccessorMapping> getFixTrailerMap() {
-		return null;
 	}
 
 	public Order() {

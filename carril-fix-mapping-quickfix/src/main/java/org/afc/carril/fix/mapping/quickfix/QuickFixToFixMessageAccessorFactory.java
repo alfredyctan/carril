@@ -13,12 +13,13 @@ import org.afc.carril.fix.mapping.impl.StateSetter;
 import org.afc.carril.fix.mapping.schema.Reference;
 import org.afc.carril.fix.mapping.schema.Type;
 import org.afc.carril.fix.mapping.schema.Use;
-import org.afc.carril.message.QuickFixMessage;
+import org.afc.carril.message.FixMessage;
+import org.afc.carril.message.FixMessage;
 import org.afc.carril.transport.TransportException;
 
 import quickfix.Message;
 
-public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Message, QuickFixMessage, Object> {
+public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Message, FixMessage, Object> {
 	
 	@Override
     public Getter<Message> createGetter(SessionState state, Reference reference, String index, Type type) {
@@ -45,15 +46,15 @@ public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Mess
     }
 
 	@Override
-	public Setter<Message, QuickFixMessage, Object> createSetter(SessionState state, Reference reference, String index, Type type) {
+	public Setter<Message, FixMessage, Object> createSetter(SessionState state, Reference reference, String index, Type type) {
 		if (reference == null) {
 			throw new TransportException("Unsupported reference type, only support {" + Reference.OBJ + "," + Reference.STATE + "}");
 		}
 		switch (reference) {
 			case OBJ:
-				return new FixMessageSetter<Message, QuickFixMessage>(index);
+				return new FixMessageSetter<Message, FixMessage>(index);
 			case STATE:
-				return new StateSetter<Message, QuickFixMessage>(state, new QuickFixBodyGetter(index, type));
+				return new StateSetter<Message, FixMessage>(state, new QuickFixBodyGetter(index, type));
 			default:
 				throw new TransportException("Unsupported reference type " + reference + 
 					", only support {" + Reference.OBJ + "," + Reference.STATE + "}");
@@ -61,7 +62,7 @@ public class QuickFixToFixMessageAccessorFactory implements AccessorFactory<Mess
 	}
 	
 	@Override
-	public TagMapper<Message, QuickFixMessage> createTagMapper(String name, Getter<Message> getter, Setter<Message, QuickFixMessage, Object> setter, String targetIndex, Use use) {
+	public TagMapper<Message, FixMessage> createTagMapper(String name, Getter<Message> getter, Setter<Message, FixMessage, Object> setter, String targetIndex, Use use) {
 	    return new QuickFixToFixMessageTagMapper(name, getter, setter, targetIndex, use);
 	}
 }

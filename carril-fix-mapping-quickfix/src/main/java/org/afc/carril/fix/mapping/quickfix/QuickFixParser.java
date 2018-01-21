@@ -12,23 +12,22 @@ import org.afc.carril.fix.mapping.schema.Direction;
 import org.afc.carril.fix.mapping.schema.MsgMap;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.message.FixMessage;
-import org.afc.carril.message.QuickFixMessage;
 import org.afc.carril.transport.TransportException;
 import org.afc.util.ObjectUtil;
 
 import quickfix.Message;
 
-public class QuickFixParser implements FixParser<Message, QuickFixMessage> {
+public class QuickFixParser implements FixParser<Message, FixMessage> {
 
-	private List<MsgMapper<Message, QuickFixMessage>> mappers;
+	private List<MsgMapper<Message, FixMessage>> mappers;
 	
 	public QuickFixParser(Direction fixToObj , SessionState state) {
-    	AccessorFactory<Message, QuickFixMessage, Object> accessorFactory = new QuickFixToFixMessageAccessorFactory();
-    	mappers = new ArrayList<MsgMapper<Message, QuickFixMessage>>();
+    	AccessorFactory<Message, FixMessage, Object> accessorFactory = new QuickFixToFixMessageAccessorFactory();
+    	mappers = new ArrayList<MsgMapper<Message, FixMessage>>();
     	if (fixToObj != null) {
     		for (MsgMap msgMap : fixToObj.getMsgMap()) {
     			try {
-    				mappers.add(new DefaultMsgMapper<Message, QuickFixMessage>(accessorFactory, msgMap, state));
+    				mappers.add(new DefaultMsgMapper<Message, FixMessage>(accessorFactory, msgMap, state));
     			} catch (Exception e) {
     				throw new TransportException("fail to parse msg map " + msgMap.getName(), e);
     			}
@@ -37,12 +36,12 @@ public class QuickFixParser implements FixParser<Message, QuickFixMessage> {
     }
 	
 	@Override
-	public QuickFixMessage parse(Message message, Class<QuickFixMessage> clazz) {
+	public FixMessage parse(Message message, Class<FixMessage> clazz) {
         try {
-			for (MsgMapper<Message, QuickFixMessage> msgMapper : mappers) {
+			for (MsgMapper<Message, FixMessage> msgMapper : mappers) {
 				String targetType = msgMapper.match(message);
 				if (targetType != null) {
-		        	QuickFixMessage fixFormat = ObjectUtil.newInstance(targetType);
+		        	FixMessage fixFormat = ObjectUtil.newInstance(targetType);
 			        fixFormat.setContext(
 			        	new FixMessage.Context(
 				        	message.getHeader().getString(FixTag.BeginString.id()),

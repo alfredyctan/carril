@@ -4,11 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.afc.carril.transport.ExceptionListener;
-import org.afc.carril.transport.Transport;
-import org.afc.carril.transport.TransportException;
-import org.afc.carril.transport.TransportListener;
+import org.afc.carril.message.GenericMessage;
 import org.afc.carril.transport.Transport.State;
+import org.afc.carril.transport.mock.MockMessage;
+import org.afc.carril.transport.mock.MockPublisher;
+import org.afc.carril.transport.mock.MockSubscriber;
+import org.afc.carril.transport.mock.MockTransport;
 import org.afc.util.JUnit4Util;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -78,8 +79,9 @@ public class AbstractTransportTest {
 		JUnit4Util.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
+		MockPublisher publisher = (MockPublisher)transport.registerPublisher("TEST");
 		transport.publish("TEST", new MockMessage());
-		assertTrue(mockTransport.isPublish());
+		assertTrue(publisher.getPublishCount() == 1);
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
@@ -174,7 +176,7 @@ public class AbstractTransportTest {
 		transport.addExceptionListener(listener);
 		transport.init();
 		transport.start();
-		transport.publish(null, null);
+		transport.stop();
 		JUnit4Util.endCurrentTest(getClass());
 	}
 

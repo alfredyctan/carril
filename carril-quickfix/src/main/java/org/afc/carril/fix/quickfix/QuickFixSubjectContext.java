@@ -64,7 +64,7 @@ class QuickFixSubjectContext extends DefaultSubjectContext implements Applicatio
 	@Override
 	public void removeSubscriber(Subscriber subscriber) {
 	    super.removeSubscriber(subscriber);
-	    if (subscriptions.size() == 0) {
+	    if (subscribers.size() == 0) {
 	    	initiator.stop();
 	    }
 	}
@@ -118,7 +118,7 @@ class QuickFixSubjectContext extends DefaultSubjectContext implements Applicatio
 	}
 	
 	private void onMessage(final Message message, final SessionID sessionId) {
-		List<QuickFixMessageHandler> handlers = (List)subscriptions;
+		List<QuickFixMessageHandler> handlers = (List)subscribers;
 		synchronized(handlers) {
 			for (QuickFixMessageHandler handler:handlers) {
 	    		try {

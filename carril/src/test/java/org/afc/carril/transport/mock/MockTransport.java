@@ -1,13 +1,14 @@
-package org.afc.carril.transport;
+package org.afc.carril.transport.mock;
 
 import java.util.List;
 
 import org.afc.carril.converter.Converter;
 import org.afc.carril.message.GenericMessage;
+import org.afc.carril.publisher.Publisher;
 import org.afc.carril.subscriber.Subscriber;
-import org.afc.carril.subscriber.SubscriberRegistry;
 import org.afc.carril.transport.ExceptionListener;
 import org.afc.carril.transport.SubjectContext;
+import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 import org.afc.carril.transport.impl.AbstractTransport;
@@ -15,7 +16,7 @@ import org.afc.carril.transport.impl.DefaultSubjectContext;
 
 
 @SuppressWarnings("rawtypes")
-class MockTransport extends AbstractTransport {
+public class MockTransport extends AbstractTransport {
 
 	private boolean init;
 	
@@ -39,6 +40,7 @@ class MockTransport extends AbstractTransport {
 
 	@Override
     protected void doStop() {
+		fireOnException(new TransportException("error on stop"));
 	    stop = true;
     }
 
@@ -58,24 +60,7 @@ class MockTransport extends AbstractTransport {
     }
 
 	@Override
-    public void publish(String subject, GenericMessage fmtObj, Converter<Object, GenericMessage> converter) throws TransportException {
-		publish = true;
-		if (subject == null) {
-			fireOnException(new TransportException("null"));
-		}
-    }
-
-	@SuppressWarnings("unchecked")
-	@Override
-    public <G extends GenericMessage> G publishRequest(String subject, GenericMessage fmtObj, Class<? extends GenericMessage> clazz,
-                                        Converter<Object, GenericMessage> converter, int timeout) throws TransportException {
-	    return (G) new MockMessage();
-    }
-
-	@Override
-    public Subscriber createSubscriber(String subject, TransportListener transportListener,
-                                           Class<? extends GenericMessage> clazz,
-                                           Converter<Object, GenericMessage> converter) {
+    public Subscriber createSubscriber(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
 	    return new MockSubscriber();
     }
 
@@ -119,23 +104,23 @@ class MockTransport extends AbstractTransport {
     	this.publish = publish;
     }
 
-	public SubscriberRegistry getRegistry() {
+	public SubjectRegistry getRegistry() {
     	return registry;
     }
 
 	@SuppressWarnings("unchecked")
-	public void setRegistry(SubscriberRegistry registry) {
+	public void setRegistry(SubjectRegistry registry) {
     	this.registry = registry;
     }
 
 	@SuppressWarnings("unchecked")
 	public List<ExceptionListener> getExptListeners() {
-    	return exptListeners;
+    	return exceptionListeners;
     }
 
 	@SuppressWarnings("unchecked")
 	public void setExptListeners(List<ExceptionListener> exptListeners) {
-    	this.exptListeners = exptListeners;
+    	this.exceptionListeners = exptListeners;
     }
 
 	@SuppressWarnings("unchecked")
@@ -143,4 +128,8 @@ class MockTransport extends AbstractTransport {
     	return converter;
     }
 
+	@Override
+	public Publisher createPublisher(String subject) {
+		return new MockPublisher(registry, subject);
+	}
 }

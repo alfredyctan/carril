@@ -8,9 +8,9 @@ import org.afc.carril.fix.mapping.schema.Type;
 
 public abstract class AbstractTokenizedGetter<S> implements Getter<S> {
 
-	private static final String PREFix = "${";
+	private static final String PREFIX = "${";
 	
-	private static final String SUFFix = "}";
+	private static final String SUFFIX = "}";
 
 	private String index;
 	
@@ -27,7 +27,7 @@ public abstract class AbstractTokenizedGetter<S> implements Getter<S> {
 		List<Getter<S>> nameList = new ArrayList<Getter<S>>();
 		List<String> tokenList = new ArrayList<String>();
 		
-		int startIndex = index.indexOf(PREFix);
+		int startIndex = index.indexOf(PREFIX);
 		int endIndex = -1; 
 		while (startIndex != -1) {
 			tokenList.add(index.substring(endIndex + 1, startIndex));
@@ -35,8 +35,8 @@ public abstract class AbstractTokenizedGetter<S> implements Getter<S> {
 			if (endIndex == -1) {
 				break;
 			}
-			nameList.add(createGetter(index.substring(startIndex + PREFix.length(), endIndex), type));
-			startIndex = index.indexOf(PREFix, endIndex + 1);
+			nameList.add(createGetter(index.substring(startIndex + PREFIX.length(), endIndex), type));
+			startIndex = index.indexOf(PREFIX, endIndex + 1);
 		}
 		if (endIndex != index.length() - 1) {
 			tokenList.add(index.substring(endIndex + 1, index.length()));
@@ -52,7 +52,7 @@ public abstract class AbstractTokenizedGetter<S> implements Getter<S> {
     }
 
 	private int findPlaceholderEndIndex(int startIndex) {
-		return index.indexOf(SUFFix, startIndex);
+		return index.indexOf(SUFFIX, startIndex);
 	}
 		
 		

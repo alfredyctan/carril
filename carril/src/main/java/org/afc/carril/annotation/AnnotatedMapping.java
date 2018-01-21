@@ -1,15 +1,30 @@
 package org.afc.carril.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.text.SimpleDateFormat;
 
+@Repeatable(AnnotatedMappings.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface AccessorMapping {
+public @interface AnnotatedMapping {
 
+	public static enum Wire {
+		Generic, Fix
+	}
+
+	public static enum Section {
+		Header, Body, Trailer
+	}
+	
+	/** type of wire format **/
+	Wire wire() default Wire.Generic;
+
+	/** section of the mapping **/
+	Section section() default Section.Body;
+	
 	/** Unique name in the external wire format **/
 	String name();
 
@@ -17,7 +32,7 @@ public @interface AccessorMapping {
 	Class<?> declare();
 
 	/** Actual implementation class of the member **/
-	Class<?> implement() default AccessorMapping.class;
+	Class<?> implement() default Void.class;
 
 	/** Getter accessor Method object for reflection **/
 	String getter() default "";
@@ -25,8 +40,8 @@ public @interface AccessorMapping {
 	/** Setter accessor Method object for reflection **/
 	String setter() default "";
 
-	/** Format Class for String type data conversion, default java.text.SimpleDateFormat **/
-	Class<?> formatter() default SimpleDateFormat.class;
+	/** Format Class for String type data conversion, default void **/
+	Class<?> formatter() default Void.class;
 
 	/** Format for String type data conversion **/
 	String format() default "";

@@ -10,6 +10,7 @@ import org.afc.carril.fix.mapping.schema.Use;
 import org.afc.carril.message.FixMessage;
 import org.afc.carril.transport.AccessorMapping;
 import org.afc.carril.transport.TransportException;
+import org.afc.carril.transport.util.AccessorMappingRegistry;
 import org.afc.util.ObjectUtil;
 import org.afc.util.StringUtil;
 import org.slf4j.Logger;
@@ -86,7 +87,7 @@ public class RawFixToFixMessageTagMapper implements TagMapper<RawFix, FixMessage
     		count = noOf.intValue();
     	}
 
-    	AccessorMapping rpGrpAccessorMapping = target.getFixMessageMap().get(targetIndex); //targetIndex is the repeating group index
+    	AccessorMapping rpGrpAccessorMapping = AccessorMappingRegistry.getFixBodyMapping(target, targetIndex); //targetIndex is the repeating group index
 		Class<FixMessage> rpGrpClazz = ObjectUtil.cast(rpGrpAccessorMapping.getImplClass());
 		List<FixMessage> rpGrpFixFormats = new LinkedList<FixMessage>();
     	int maxIndex = source.getIndex();

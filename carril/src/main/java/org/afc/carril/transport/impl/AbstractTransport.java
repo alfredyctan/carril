@@ -5,20 +5,21 @@ import java.util.List;
 
 import org.afc.carril.converter.Converter;
 import org.afc.carril.message.GenericMessage;
-import org.afc.carril.subscriber.DefaultSubscriberRegistry;
+import org.afc.carril.publisher.Publisher;
+import org.afc.carril.publisher.PublisherFactory;
 import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.subscriber.SubscriberFactory;
-import org.afc.carril.subscriber.SubscriberRegistry;
 import org.afc.carril.transport.ExceptionListener;
 import org.afc.carril.transport.SubjectContext;
 import org.afc.carril.transport.SubjectContextFactory;
+import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.Transport;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractTransport<C extends SubjectContext> implements Transport, SubscriberFactory, SubjectContextFactory<C> {
+public abstract class AbstractTransport<C extends SubjectContext> implements Transport, SubscriberFactory, PublisherFactory, SubjectContextFactory<C> {
 
 	protected static Logger logger = LoggerFactory.getLogger(AbstractTransport.class);
 
@@ -30,15 +31,14 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 
 	protected Converter<Object, GenericMessage> converter;
 
-	protected SubscriberRegistry<C> registry;
+	protected SubjectRegistry<C> registry;
 	
-	protected List<ExceptionListener> exptListeners;
+	protected List<ExceptionListener> exceptionListeners;
 
 	public AbstractTransport() {
 		this.state = State.DISPOSE;
-		this.registry = new DefaultSubscriberRegistry<C>();
-		this.exptListeners = new LinkedList<ExceptionListener>();
-		this.registry.setSubjectContextFactory(this);
+		this.registry = new DefaultSubjectRegistry<C>();
+		this.exceptionListeners = new LinkedList<ExceptionListener>();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 		logger.info("Transport [{}] starting.", name);
 
 		try {
-			for (SubjectContext subject : registry.allSubjectContexts()) {
+			for (SubjectContext subject : registry.getSubjectContexts()) {
 				for (Subscriber subscription : subject.getSubscribers()) {
 					subscription.subscribe();
 				}
@@ -84,7 +84,7 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 			return ;
 		}
 		logger.info("Transport [{}] stopping.", name);
-		for (C subjectContext : registry.allSubjectContexts()) {
+		for (C subjectContext : registry.getSubjectContexts()) {
 			for (Subscriber subscription : new LinkedList<Subscriber>(subjectContext.getSubscribers())) {
 				try {
 					subscription.unsubscribe();
@@ -107,8 +107,8 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 
 		logger.info("Transport [{}] disposing.", name);
 	    doDispose();
-	    synchronized(exptListeners) {
-	    	exptListeners.clear();
+	    synchronized(exceptionListeners) {
+	    	exceptionListeners.clear();
 	    }
 		state = State.DISPOSE;
 		logger.info("Transport [{}] disposed.", name);
@@ -145,26 +145,6 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 	}
 	
 	@Override
-	public void publish(String subject, GenericMessage fmtObj) throws TransportException {
-		publish(subject, fmtObj, converter);
-	}
-
-	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage fmtObj, Class<? extends GenericMessage> clazz) throws TransportException {
-		return publishRequest(subject, fmtObj, clazz, converter);
-	}
-
-	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage fmtObj, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) throws TransportException {
-		return publishRequest(subject, fmtObj, clazz, converter, 0);
-	}
-
-	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage fmtObj, Class<? extends GenericMessage> clazz, int timeout) throws TransportException {
-		return publishRequest(subject, fmtObj, clazz, converter, timeout);
-	}
-
-	@Override
 	public Subscriber subscribe(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz) throws TransportException {
 		return subscribe(subject, transportListener, clazz, converter);
 	}
@@ -172,13 +152,14 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 	@Override
 	public Subscriber subscribe(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) throws TransportException {
 		try {
-			Subscriber subscription = createSubscriber(subject, transportListener, clazz, converter);
-			registry.register(subject, subscription);
+			C subjectContext = ensureSubjectContext(subject);
+			Subscriber subscriber = createSubscriber(subject, transportListener, clazz, converter);
+			subjectContext.addSubscriber(subscriber);
 
 			if (state == State.START) {
-				subscription.subscribe();
+				subscriber.subscribe();
 			}
-			return subscription;
+			return subscriber;
 		} catch (TransportException te){
 			throw te;
 		} catch (Exception e) {
@@ -193,20 +174,81 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 			subscription.unsubscribe();
 		}
 	}
+
+	@Override
+	public Publisher registerPublisher(String subject) {
+		try {
+			C subjectContext = ensureSubjectContext(subject);
+			Publisher publisher = createPublisher(subject);
+			subjectContext.addPublisher(publisher);
+			return publisher;
+		} catch (TransportException te){
+			throw te;
+		} catch (Exception e) {
+			throw new TransportException("Transport subscription error : ", e);
+		}
+	}
+
+	@Override
+	public void publish(String subject, GenericMessage message) throws TransportException {
+		publish(subject, message, converter);
+	}
+
+	@Override
+	public void publish(String subject, GenericMessage message, Converter<Object, GenericMessage> converter) throws TransportException {
+		Publisher publisher = ensurePublisher(subject);
+		publisher.publish(subject, message, converter);
+	}
 	
 	@Override
+	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz) throws TransportException {
+		return publishRequest(subject, message, clazz, converter, 0);
+	}
+
+	@Override
+	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) throws TransportException {
+		return publishRequest(subject, message, clazz, converter, 0);
+	}
+
+	@Override
+	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, int timeout) throws TransportException {
+		return publishRequest(subject, message, clazz, converter, timeout);
+	}
+
+	@Override
+	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter, int timeout) throws TransportException {
+		Publisher publisher = ensurePublisher(subject);
+		return publisher.publishRequest(subject, message, clazz, converter, timeout);
+	}
+
+	@Override
 	public void addExceptionListener(ExceptionListener listener) {
-		synchronized(exptListeners) {
-			exptListeners.add(listener);
+		synchronized(exceptionListeners) {
+			exceptionListeners.add(listener);
 		}
 	}
 	
     protected void fireOnException(TransportException e) {
-		synchronized(exptListeners) {
-			for (ExceptionListener listener : exptListeners) {
+		synchronized(exceptionListeners) {
+			for (ExceptionListener listener : exceptionListeners) {
 				listener.onException(e);
 			}
 		}
+	}
+	
+	private C ensureSubjectContext(String subject) {
+		C subjectContext = registry.getSubjectContext(subject);
+		if (subjectContext == null) {
+			subjectContext  = createSubjectContext(subject);
+			registry.register(subject, subjectContext);
+		}
+		return subjectContext;
+	}
+
+	private Publisher ensurePublisher(String subject) {
+		C subjectContext = ensureSubjectContext(subject);
+		Publisher publisher = (subjectContext.getPublishers().size() > 0) ? subjectContext.getPublishers().get(0) : registerPublisher(subject);
+		return publisher;
 	}
 	
 	protected abstract void doInit();

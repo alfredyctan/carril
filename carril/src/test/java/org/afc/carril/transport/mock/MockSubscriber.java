@@ -1,8 +1,8 @@
-package org.afc.carril.transport;
+package org.afc.carril.transport.mock;
 
 import org.afc.carril.converter.Converter;
 import org.afc.carril.subscriber.AbstractSubscriber;
-import org.afc.carril.subscriber.SubscriberRegistry;
+import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 
@@ -15,7 +15,7 @@ public class MockSubscriber extends AbstractSubscriber {
 	
 	
 	@SuppressWarnings("unchecked")
-	protected MockSubscriber(SubscriberRegistry registry, String subject, TransportListener transportListener,
+	protected MockSubscriber(SubjectRegistry registry, String subject, TransportListener transportListener,
                                 Class clazz, Converter converter) {
 	    super(registry, subject, transportListener, clazz, converter);
     }
