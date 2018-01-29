@@ -6,6 +6,6 @@ import org.afc.carril.transport.TransportListener;
 
 public interface SubscriberFactory {
 
-	public Subscriber createSubscriber(String subject, TransportListener listener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter);
+	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener listener, Class<G> clazz, Converter<W, G> converter);
 	
 }

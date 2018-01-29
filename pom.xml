@@ -12,5 +12,6 @@
 		<module>carril-fix-mapping-rawfix</module>
 		<module>carril-fix-tag</module>
 		<module>carril-quickfix</module>
+		<module>carril-jms</module>
 	</modules>
 </project>

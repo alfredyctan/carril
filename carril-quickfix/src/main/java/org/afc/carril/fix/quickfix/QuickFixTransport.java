@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.afc.carril.converter.Converter;
-import org.afc.carril.message.FixMessage;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.publisher.Publisher;
 import org.afc.carril.subscriber.Subscriber;
@@ -71,14 +70,19 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 		return null;
 	}
 
-    @Override
-	public Subscriber createSubscriber(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
-    	return new QuickFixSubscriber(registry, subject, transportListener, ObjectUtil.<Class<? extends FixMessage>>cast(clazz), converter);
+	@Override
+	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener listener, Class<G> clazz, Converter<W, G> converter) {
+    	return new QuickFixSubscriber(registry, subject, listener, ObjectUtil.<Class<G>>cast(clazz), converter);
 	}
+	
+//    @Override
+//	public Subscriber createSubscriber(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
+//    	return new QuickFixSubscriber(registry, subject, transportListener, ObjectUtil.<Class<? extends FixMessage>>cast(clazz), converter);
+//	}
 
 	@Override
 	public Publisher createPublisher(String subject) {
-		return new QuickFixPublisher(registry, subject, null, null, converter);
+		return new QuickFixPublisher(registry, subject, null, converter);
 	}
 
     @Override

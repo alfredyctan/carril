@@ -12,16 +12,16 @@ public abstract class AbstractSubscriber<C extends SubjectContext> implements Su
 
 	protected String subject;
 
-	protected TransportListener transportListener;
+	protected TransportListener listener;
 
 	protected Class<? extends GenericMessage> clazz;
 
-	protected Converter<Object, GenericMessage> converter;
+	protected Converter converter;
 
-	protected AbstractSubscriber(SubjectRegistry<C> registry, String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
+	protected <W, G extends GenericMessage> AbstractSubscriber(SubjectRegistry<C> registry, String subject, TransportListener listener, Class<G> clazz, Converter<W, G> converter) {
 		this.registry = registry;
         this.subject = subject;
-        this.transportListener = transportListener;
+        this.listener = listener;
         this.clazz = clazz;
         this.converter = converter;
     }

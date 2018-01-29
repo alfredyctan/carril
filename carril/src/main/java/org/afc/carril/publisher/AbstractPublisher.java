@@ -14,9 +14,9 @@ public abstract class AbstractPublisher<C extends SubjectContext> implements Pub
 
 	protected Class<? extends GenericMessage> clazz;
 
-	protected Converter<Object, GenericMessage> converter;
+	protected Converter converter;
 
-	protected AbstractPublisher(SubjectRegistry<C> registry, String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
+	protected <W, G extends GenericMessage> AbstractPublisher(SubjectRegistry<C> registry, String subject, Class<G> clazz, Converter<W, G> converter) {
 		this.registry = registry;
         this.subject = subject;
         this.clazz = clazz;

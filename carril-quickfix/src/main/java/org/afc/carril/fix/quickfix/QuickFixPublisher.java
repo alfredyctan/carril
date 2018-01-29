@@ -15,17 +15,17 @@ import quickfix.SessionNotFound;
 
 public class QuickFixPublisher extends AbstractPublisher<QuickFixSubjectContext> {
 
-	protected QuickFixPublisher(SubjectRegistry<QuickFixSubjectContext> registry, String subject,
-			TransportListener transportListener, Class<? extends GenericMessage> clazz,
-			Converter<Object, GenericMessage> converter) {
-		super(registry, subject, transportListener, clazz, converter);
+	protected <W, G extends GenericMessage> QuickFixPublisher(SubjectRegistry<QuickFixSubjectContext> registry, String subject,
+			Class<G> clazz,
+			Converter<W, G> converter) {
+		super(registry, subject, clazz, converter);
 	}
 
 	@Override
-	public void publish(String subject, GenericMessage fmtObj, Converter<Object, GenericMessage> converter) throws TransportException {
+	public <W, G extends GenericMessage> void publish(String subject, G message, Converter<W, G> converter) throws TransportException {
 		try {
 			QuickFixSubjectContext application = registry.getSubjectContext(subject);
-			FixMessage fixFormat = ObjectUtil.<FixMessage>cast(fmtObj);
+			FixMessage fixFormat = ObjectUtil.<FixMessage>cast(message);
 	        fixFormat.setContext(
 	        	new FixMessage.Context(
 		        	application.getSessionID().getBeginString(),
@@ -33,18 +33,23 @@ public class QuickFixPublisher extends AbstractPublisher<QuickFixSubjectContext>
 		        	application.getSessionID().getTargetCompID()
 		        )
 	        );
-			Message message = (Message)converter.format(fmtObj);
-	        Session.sendToTarget(message, application.getSessionID());
+			Message jmsMessage = (Message)converter.format(message);
+	        Session.sendToTarget(jmsMessage, application.getSessionID());
 		} catch (SessionNotFound e) {
         	throw new TransportException("fail to send message. ", e);
         }
 	}
-		
+
 	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message,
-			Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter, int timeout)
-			throws TransportException {
-		publish(subject, message, converter);
+	public <W, G extends GenericMessage> G publishRequest(String subject, G message, Class<? extends G> clazz,
+			Converter<W, G> converter, int timeout) throws TransportException {
+		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }

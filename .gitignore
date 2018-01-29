@@ -25,3 +25,4 @@ build
 .settings
 
 /target/
+/.metadata/

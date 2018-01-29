@@ -20,8 +20,8 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixSubscriber.class);
 	
-	public QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener transportListener, Class<? extends FixMessage> clazz, Converter<Object, GenericMessage> converter) {
-        super(registry, subject, transportListener, clazz, converter);
+	public <W, G extends GenericMessage> QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener listner, Class<G> clazz, Converter<W, G> converter) {
+        super(registry, subject, listner, clazz, converter);
     }
 
 	@Override
@@ -50,7 +50,7 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
 						logger.trace("cannot convert any message to handle : {}", subject);
 						return;
 					}
-					transportListener.onMessage(convertedData);
+					listener.onMessage(convertedData);
 					
 					//Fix is async-only protocal
 					logger.trace("message handled : {}", subject);
@@ -60,10 +60,10 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
 			} // /run()
 		}
 
-		if (transportListener == null) { // for the case that publish without create session
+		if (listener == null) { // for the case that publish without create session
 			return;
 		}
-		ExecutorService executorService = transportListener.getExecutorService();
+		ExecutorService executorService = listener.getExecutorService();
 		if (executorService != null) {
 			logger.trace("{} using provided executor service to handle", subject);
 			executorService.execute(new OnMessageRunnable());

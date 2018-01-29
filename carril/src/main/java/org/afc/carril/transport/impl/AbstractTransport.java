@@ -29,7 +29,7 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 
 	protected String subscriberName;
 
-	protected Converter<Object, GenericMessage> converter;
+	protected Converter converter;
 
 	protected SubjectRegistry<C> registry;
 	
@@ -140,17 +140,17 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 	}
 
 	@Override
-	public void setConverter(Converter<Object, GenericMessage> converter) {
+	public <W, G extends GenericMessage> void setConverter(Converter<W, G> converter) {
 		this.converter = converter;
 	}
 	
 	@Override
-	public Subscriber subscribe(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz) throws TransportException {
+	public <G extends GenericMessage> Subscriber subscribe(String subject, TransportListener transportListener, Class<G> clazz) throws TransportException {
 		return subscribe(subject, transportListener, clazz, converter);
 	}
 
 	@Override
-	public Subscriber subscribe(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) throws TransportException {
+	public <W, G extends GenericMessage> Subscriber subscribe(String subject, TransportListener transportListener, Class<G> clazz, Converter<W, G> converter) throws TransportException {
 		try {
 			C subjectContext = ensureSubjectContext(subject);
 			Subscriber subscriber = createSubscriber(subject, transportListener, clazz, converter);
@@ -190,33 +190,33 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 	}
 
 	@Override
-	public void publish(String subject, GenericMessage message) throws TransportException {
+	public <G extends GenericMessage> void publish(String subject, G message) throws TransportException {
 		publish(subject, message, converter);
 	}
 
 	@Override
-	public void publish(String subject, GenericMessage message, Converter<Object, GenericMessage> converter) throws TransportException {
+	public <W, G extends GenericMessage> void publish(String subject, G message, Converter<W, G> converter) throws TransportException {
 		Publisher publisher = ensurePublisher(subject);
 		publisher.publish(subject, message, converter);
 	}
 	
 	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz) throws TransportException {
+	public <W, G extends GenericMessage> G publishRequest(String subject, G message, Class<G> clazz) throws TransportException {
+		return publishRequest(subject, message, clazz, (Converter<W, G>)converter, 0);
+	}
+
+	@Override
+	public <W, G extends GenericMessage> G publishRequest(String subject, G message, Class<G> clazz, Converter<W, G> converter) throws TransportException {
 		return publishRequest(subject, message, clazz, converter, 0);
 	}
 
 	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) throws TransportException {
-		return publishRequest(subject, message, clazz, converter, 0);
+	public <W, G extends GenericMessage> G publishRequest(String subject, G message, Class<G> clazz, int timeout) throws TransportException {
+		return publishRequest(subject, message, clazz, (Converter<W, G>)converter, timeout);
 	}
 
 	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, int timeout) throws TransportException {
-		return publishRequest(subject, message, clazz, converter, timeout);
-	}
-
-	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter, int timeout) throws TransportException {
+	public <W, G extends GenericMessage> G publishRequest(String subject, G message, Class<G> clazz, Converter<W, G> converter, int timeout) throws TransportException {
 		Publisher publisher = ensurePublisher(subject);
 		return publisher.publishRequest(subject, message, clazz, converter, timeout);
 	}

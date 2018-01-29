@@ -11,12 +11,12 @@ import org.afc.carril.transport.TransportListener;
 public class MockPublisher extends AbstractPublisher {
 
 	public MockPublisher(SubjectRegistry registry, String subject) {
-		this(null, null, null, null, null);
+		this(null, null, null, null);
     }
 	
 	@SuppressWarnings("unchecked")
-	protected MockPublisher(SubjectRegistry registry, String subject, TransportListener transportListener, Class clazz, Converter converter) {
-	    super(registry, subject, transportListener, clazz, converter);
+	protected MockPublisher(SubjectRegistry registry, String subject, Class clazz, Converter converter) {
+	    super(registry, subject, clazz, converter);
     }
 
 	private int publishCount;
@@ -32,15 +32,20 @@ public class MockPublisher extends AbstractPublisher {
     }
 
 	@Override
-	public void publish(String subject, GenericMessage message, Converter<Object, GenericMessage> converter) throws TransportException {
+	public <W, G extends org.afc.carril.message.GenericMessage> void publish(String subject, G message,
+			Converter<W, G> converter) throws TransportException {
 		publishCount++;
 	}
-
-
+	
 	@Override
-	public <G extends GenericMessage> G publishRequest(String subject, GenericMessage message, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter, int timeout) throws TransportException {
+	public <W, G extends org.afc.carril.message.GenericMessage> G publishRequest(String subject, G message,
+			Class<? extends G> clazz, Converter<W, G> converter, int timeout) throws TransportException {
 		requestCount++;
 		return (G)new MockMessage();
 	}
-
+	
+	@Override
+	public void dispose() {
+		
+	}
 }
