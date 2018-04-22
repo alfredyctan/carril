@@ -82,9 +82,6 @@ public class QuickFixApplication implements Application {
 	}
 	
 	private void onMessage(final Message message) throws FieldNotFound {
-		System.err.println(QuickFixUtil.createOpponentSubject(message));
-		System.err.println(registry.getSubjectContext(QuickFixUtil.createOpponentSubject(message)));
-		System.err.println(registry.getSubjectContext(QuickFixUtil.createOpponentSubject(message)).getSubscribers());
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		List<QuickFixMessageListener> handlers = (List)registry.getSubjectContext(QuickFixUtil.createOpponentSubject(message)).getSubscribers();
 		synchronized(handlers) {

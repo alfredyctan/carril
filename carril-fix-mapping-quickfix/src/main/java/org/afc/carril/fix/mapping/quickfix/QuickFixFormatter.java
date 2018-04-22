@@ -52,7 +52,7 @@ public class QuickFixFormatter implements FixFormatter<FixMessage, Message> {
     				return message; 
     			}
     		}
-    		return null;
+    		throw new TransportException("schema conversion mapping not found for the message " + fixFormat);
         } catch (TransportException e) {
         	throw e;
         } catch (Exception e) {

@@ -64,6 +64,15 @@ public interface FixMessage extends GenericMessage {
 		public Date getSendingTime() {
         	return sendingTime;
         }
+
+		@Override
+		public String toString() {
+			return "Context [" + (protocolVersion != null ? "protocolVersion=" + protocolVersion + ", " : "")
+					+ (senderCompID != null ? "senderCompID=" + senderCompID + ", " : "")
+					+ (targetCompID != null ? "targetCompID=" + targetCompID + ", " : "")
+					+ (msgType != null ? "msgType=" + msgType + ", " : "") + "msgSeqNum=" + msgSeqNum + ", "
+					+ (sendingTime != null ? "sendingTime=" + sendingTime : "") + "]";
+		}
 	}
 
 	public void setContext(Context context);

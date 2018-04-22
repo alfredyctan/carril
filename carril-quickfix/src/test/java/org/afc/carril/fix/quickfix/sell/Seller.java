@@ -33,6 +33,8 @@ public class Seller implements CommandLineRunner {
 			@Override
 			public FixMessage onMessage(FixMessage message) {
 				System.out.println("message received " + message);
+				transport.publish("FIX.4.2:SELL-BUY", message);
+				
 				return null;
 			}
 		}, FixMessage.class);
