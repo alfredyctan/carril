@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fix-conv xmlns="http://www.afc.org/carril/fix">
+	<fix-to-obj>
+		<msg-map name="Login" source="FIX-HEADER" source-index="${35}" source-expression="A" target-type="org.afc.carril.fix.quickfix.model.fix.FixLogin">
+			<tags>
+				<tag name="bodyLength"      type="INT"    source="FIX" source-index="${9}"   target="OBJ" target-index="bodyLength"      />
+				<tag name="encryptMethod"   type="INT"    source="FIX" source-index="${98}"  target="OBJ" target-index="encryptMethod"   use="REQ" />
+				<tag name="heartBtInt"      type="INT"    source="FIX" source-index="${108}" target="OBJ" target-index="heartBtInt"      use="REQ" />
+				<tag name="resetSeqNumFlag" type="STRING" source="FIX" source-index="${141}" target="OBJ" target-index="resetSeqNumFlag" use="REQ" />
+				<tag name="checkSum"        type="INT"    source="FIX" source-index="${10}"  target="OBJ" target-index="checkSum"        />
+			</tags>
+		</msg-map>
+	</fix-to-obj>
+</fix-conv>

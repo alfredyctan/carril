@@ -8,6 +8,8 @@ public interface TransportListener {
 
 	public GenericMessage onMessage(GenericMessage message);
 
-	public ExecutorService getExecutorService();
+	public default ExecutorService getExecutorService() {
+		return null;
+	};
 	
 }

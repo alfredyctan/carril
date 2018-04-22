@@ -1,0 +1,7 @@
+carril:
+  sell:
+    quickfix:
+      connectionType: acceptor
+      socketAcceptPort: 13579  
+      socketAcceptAddress: 127.0.0.1
+      dataDictionary: src/main/resources/cfg/FIX42.xml

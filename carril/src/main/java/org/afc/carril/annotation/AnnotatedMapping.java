@@ -26,10 +26,10 @@ public @interface AnnotatedMapping {
 	Section section() default Section.Body;
 	
 	/** Unique name in the external wire format **/
-	String name();
+	String name() default "";
 
 	/** Declared class in the object, normally will be same to implClass except List/Map...etc member **/
-	Class<?> declare();
+	Class<?> declare() default Void.class;
 
 	/** Actual implementation class of the member **/
 	Class<?> implement() default Void.class;

@@ -9,7 +9,6 @@ import java.util.Map;
 import org.afc.carril.converter.Converter;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.message.FixMessage;
-import org.afc.carril.message.FixMessage;
 import org.afc.carril.text.UTCDateFormat;
 import org.afc.carril.text.UTCTimeFormat;
 import org.afc.carril.transport.AccessorMapping;
@@ -202,7 +201,4 @@ public class StatelessQuickFixConverter implements Converter<Message, FixMessage
         	}
         }
 	}
-	
-	
-	
 }

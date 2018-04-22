@@ -66,8 +66,8 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 
 		try {
 			for (SubjectContext subject : registry.getSubjectContexts()) {
-				for (Subscriber subscription : subject.getSubscribers()) {
-					subscription.subscribe();
+				for (Subscriber subscriber : subject.getSubscribers()) {
+					subscriber.subscribe();
 				}
 			}
 			doStart();
@@ -85,11 +85,11 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 		}
 		logger.info("Transport [{}] stopping.", name);
 		for (C subjectContext : registry.getSubjectContexts()) {
-			for (Subscriber subscription : new LinkedList<Subscriber>(subjectContext.getSubscribers())) {
+			for (Subscriber subscriber : new LinkedList<Subscriber>(subjectContext.getSubscribers())) {
 				try {
-					subscription.unsubscribe();
+					subscriber.unsubscribe();
 				} catch (Exception e) {
-					logger.error("Transport [{}], error on stopping subscriptions stopping.", name);
+					logger.error("Transport [{}], error on stopping subscribers stopping.", name);
 				}
 			}
 		}
@@ -163,15 +163,15 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 		} catch (TransportException te){
 			throw te;
 		} catch (Exception e) {
-			throw new TransportException("Transport subscription error : ", e);
+			throw new TransportException("Transport subscribe error : ", e);
 		}
 	}
 
 	@Override
 	public void unsubscribe(String subject) throws TransportException {
-		SubjectContext subjects = registry.unregister(subject);
-		for(Subscriber subscription : subjects.getSubscribers()) {
-			subscription.unsubscribe();
+		SubjectContext subjectContext = registry.unregister(subject);
+		for(Subscriber subscriber : subjectContext.getSubscribers()) {
+			subscriber.unsubscribe();
 		}
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractTransport<C extends SubjectContext> implements Tra
 		} catch (TransportException te){
 			throw te;
 		} catch (Exception e) {
-			throw new TransportException("Transport subscription error : ", e);
+			throw new TransportException("Transport register publisher error : ", e);
 		}
 	}
 

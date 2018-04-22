@@ -15,50 +15,81 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.ConfigError;
+import quickfix.Connector;
+import quickfix.DefaultMessageFactory;
+import quickfix.DefaultSessionFactory;
+import quickfix.FieldConvertError;
+import quickfix.FileStoreFactory;
+import quickfix.MemoryStoreFactory;
+import quickfix.RuntimeError;
+import quickfix.SLF4JLogFactory;
+import quickfix.SessionFactory;
 import quickfix.SessionSettings;
-
+import quickfix.SocketAcceptor;
+import quickfix.SocketInitiator;
+/*
+ * 1 transport - 1 connector type - (n subject / n session), 1 subject - n subscriber callback 
+ */
 public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext> {
 
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixTransport.class);
 	
 	private QuickFixSettings settings;
-	
-	public QuickFixTransport() {
-		this.settings = new QuickFixSettings();
-	}
-	
+
+	private SessionSettings sessionSettings;
+
+	private SessionFactory sessionFactory; 
+
+	private Connector connector; 
+
 	@Override
 	protected void doInit() {
-		SessionSettings sessionSettings = settings.createDefaultSessionSettings();
-    	logger.info("default session properties : ");
+		sessionSettings = settings.createDefaultSessionSettings();
+    	
+		logger.info("default session properties : ");
 	    for (Map.Entry<?, ?> entry : new TreeMap<Object, Object>(sessionSettings.getDefaultProperties()).entrySet()) {
 	    	Object key = (String)entry.getKey();
 	    	Object value = (String)entry.getValue();
 	    	logger.info("{} = {}", key, value);
 	    }
 
+		sessionFactory = new DefaultSessionFactory(
+			new QuickFixApplication(registry), 
+			(settings.getFileStorePath() == null) ? new MemoryStoreFactory() : new FileStoreFactory(sessionSettings), 
+			new SLF4JLogFactory(sessionSettings), 
+			new DefaultMessageFactory()
+		);
+	    
+		try {
+			switch (settings.getConnectionType()) {
+				case SessionFactory.INITIATOR_CONNECTION_TYPE:
+					connector = new SocketInitiator(sessionFactory, sessionSettings, 1024);
+					break;
+				case SessionFactory.ACCEPTOR_CONNECTION_TYPE:
+					connector = new SocketAcceptor(sessionFactory, sessionSettings, 1024);
+					break;
+				default:
+					throw new TransportException("invalid connection type " + settings.getConnectionType());
+			}
+		} catch (ConfigError e) {
+			throw new TransportException("fail to create connector", e);
+		}
 	}
 
 	@Override
 	protected void doStart() {
-		for (QuickFixSubjectContext subjectContext : registry.getSubjectContexts()) {
-			try {
-	            subjectContext.start();
-            } catch (Exception e) {
-            	throw new TransportException(e);
-            }
+		try {
+			connector.start();
+			logger.debug("connector started.");
+		} catch (RuntimeError | ConfigError e) {
+			throw new TransportException("fail to start connector", e);
 		}
 	}
 
 	@Override
 	protected void doStop() {
-		for (QuickFixSubjectContext subjectContext : registry.getSubjectContexts()) {
-			try {
-				subjectContext.stop();
-            } catch (Exception e) {
-            	logger.error("Failed to stop the QuickFix Transport", e);
-            }
-		}
+		connector.stop(true);
+		logger.debug("connector stopped.");
 	}
 
 	@Override
@@ -67,7 +98,7 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 
 	@Override
 	public Object getBaseImplementation() {
-		return null;
+		return new Object[] {sessionFactory, connector};
 	}
 
 	@Override
@@ -75,21 +106,16 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
     	return new QuickFixSubscriber(registry, subject, listener, ObjectUtil.<Class<G>>cast(clazz), converter);
 	}
 	
-//    @Override
-//	public Subscriber createSubscriber(String subject, TransportListener transportListener, Class<? extends GenericMessage> clazz, Converter<Object, GenericMessage> converter) {
-//    	return new QuickFixSubscriber(registry, subject, transportListener, ObjectUtil.<Class<? extends FixMessage>>cast(clazz), converter);
-//	}
-
 	@Override
 	public Publisher createPublisher(String subject) {
-		return new QuickFixPublisher(registry, subject, null, converter);
+		return new QuickFixPublisher(registry, subject, converter);
 	}
 
     @Override
     public QuickFixSubjectContext createSubjectContext(String subject) {
         try {
-	        return new QuickFixSubjectContext(subject, settings.createDefaultSessionSettings(), settings.getFileStorePath(), state) ;
-        } catch (ConfigError e) {
+	        return new QuickFixSubjectContext(subject, sessionSettings) ;
+        } catch (ConfigError | FieldConvertError e) {
         	throw new TransportException("fail to SubjectContext.", e);
         }
     }

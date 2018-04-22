@@ -1,0 +1,17 @@
+<configuration>
+	<appender name="MAIN" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%5p][%5.5X{SDC}][%-40.40logger{39}] : %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="MAIN" />
+	</appender>
+
+	<logger name="org.afc.carril" level="DEBUG"/>
+	
+	<root level="INFO">
+		<appender-ref ref="ASYNC" />
+	</root>
+</configuration>

@@ -18,7 +18,7 @@ public class FixSubject implements BeginStringSetter, SenderCompIDSetter, Target
 	public static FixSubjectParser newParser(String subject) {
 		FixSubject fixSubject = new FixSubject();
 		fixSubject.parseSubject(subject);
-		return  fixSubject;
+		return fixSubject;
 	}
 	
 	@Override

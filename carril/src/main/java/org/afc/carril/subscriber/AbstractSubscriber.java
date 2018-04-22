@@ -4,6 +4,7 @@ import org.afc.carril.converter.Converter;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.transport.SubjectContext;
 import org.afc.carril.transport.SubjectRegistry;
+import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 
 public abstract class AbstractSubscriber<C extends SubjectContext> implements Subscriber {
@@ -25,4 +26,14 @@ public abstract class AbstractSubscriber<C extends SubjectContext> implements Su
         this.clazz = clazz;
         this.converter = converter;
     }
+
+	@Override
+    public void subscribe() throws TransportException {
+       	registry.getSubjectContext(subject).addSubscriber(this);
+    }
+
+	@Override
+    public void unsubscribe() throws TransportException {
+		registry.getSubjectContext(subject).removeSubscriber(this);
+	}
 }

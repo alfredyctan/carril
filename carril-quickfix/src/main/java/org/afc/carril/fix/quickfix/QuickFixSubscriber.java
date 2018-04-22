@@ -3,20 +3,17 @@ package org.afc.carril.fix.quickfix;
 import java.util.concurrent.ExecutorService;
 
 import org.afc.carril.converter.Converter;
-import org.afc.carril.message.FixMessage;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.subscriber.AbstractSubscriber;
 import org.afc.carril.transport.SubjectRegistry;
-import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 import org.afc.logging.SDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import quickfix.Message;
-import quickfix.SessionID;
 
-class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> implements QuickFixMessageHandler {
+public class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> implements QuickFixMessageListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixSubscriber.class);
 	
@@ -25,17 +22,7 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
     }
 
 	@Override
-    public void subscribe() throws TransportException {
-       	registry.getSubjectContext(subject).addSubscriber(this);
-    }
-
-	@Override
-    public void unsubscribe() throws TransportException {
-		registry.getSubjectContext(subject).removeSubscriber(this);
-	}
-
-	@Override
-	public void onMessage(final Message message, final SessionID sessionId) {
+	public void onMessage(final Message message) {
 		final String context = SDC.peek();
 		class OnMessageRunnable implements Runnable {
 
@@ -43,6 +30,7 @@ class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> impl
 				SDC.set(context);
 				try {
 					// Convert to generic format in adaptor
+					@SuppressWarnings("unchecked")
 					GenericMessage convertedData = converter.parse(message, clazz);
 
 					// process the message

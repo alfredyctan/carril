@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.afc.carril.FixBaseMessage;
-import org.afc.carril.fix.quickfix.StatelessQuickFixConverter;
 import org.afc.carril.fix.quickfix.text.QuickFixMsgStringWrapper;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.message.FixMessage;

@@ -15,6 +15,7 @@ import org.afc.carril.annotation.AnnotatedMapping.Wire;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.transport.AccessorMapping;
 import org.afc.carril.transport.TransportException;
+import org.afc.util.StringUtil;
 
 public class AccessorMappingRegistry {
 
@@ -118,10 +119,17 @@ public class AccessorMappingRegistry {
 				continue;
 			}
 			if (ann.wire() == Wire.Generic || ann.wire() == wire) {
+				String name = StringUtil.hasValue(ann.name()) ? ann.name() : field.getName();
 				indexMappings.put(
-					ann.name(), 
+					name, 
 					createAccessorMapping(
-						clazz, ann.name(), ann.getter(), ann.setter(), ann.declare(), ann.implement(), createFormat(ann)
+						clazz, 
+						name, 
+						StringUtil.hasValue(ann.getter()) ? ann.getter() : deriveGetter(field), 
+						StringUtil.hasValue(ann.setter()) ? ann.setter() : deriveSetter(field), 
+						ann.declare() != Void.class ? ann.declare() : field.getType(),
+						ann.implement(), 
+						createFormat(ann)
 					)
 				);
 			}
@@ -129,6 +137,15 @@ public class AccessorMappingRegistry {
 		return indexMappings;
 	}
 	
+	private static String deriveGetter(Field field) {
+		String prefix = (field.getType() == Boolean.class || field.getType() == boolean.class) ? "is" : "get";
+		return prefix + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+	}
+
+	private static String deriveSetter(Field field) {
+		return "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+	}
+
 	private static Format createFormat(AnnotatedMapping ann) {
 		try {
 			if (Void.class.equals(ann.formatter())) {
@@ -151,9 +168,5 @@ public class AccessorMappingRegistry {
 		} catch (NoSuchMethodException nsme) {
 			throw new TransportException(nsme);
 		}
-	}
-	
-	private static Map<String, AccessorMapping> createAccessorMappingMap(AccessorMapping... mappings) {
-		return Arrays.asList(mappings).stream().collect(Collectors.toMap(AccessorMapping::getFieldName, v -> v));
 	}
 }
