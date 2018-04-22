@@ -102,8 +102,8 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 	}
 
 	@Override
-	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener listener, Class<G> clazz, Converter<W, G> converter) {
-    	return new QuickFixSubscriber(registry, subject, listener, ObjectUtil.<Class<G>>cast(clazz), converter);
+	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener<GenericMessage> listener, Class<G> clazz, Converter<W, G> converter) {
+    	return new QuickFixSubscriber(registry, subject, listener, ObjectUtil.<Class<GenericMessage>>cast(clazz), converter);
 	}
 	
 	@Override

@@ -17,7 +17,7 @@ public class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContex
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixSubscriber.class);
 	
-	public <W, G extends GenericMessage> QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener listner, Class<G> clazz, Converter<W, G> converter) {
+	public <W, G extends GenericMessage> QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener<GenericMessage> listner, Class<GenericMessage> clazz, Converter<W, G> converter) {
         super(registry, subject, listner, clazz, converter);
     }
 

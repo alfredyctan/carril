@@ -60,7 +60,7 @@ public class MockTransport extends AbstractTransport {
     }
 
 	@Override
-	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener listener, Class<G> clazz, Converter<W, G> converter) {
+	public <W, G extends GenericMessage> Subscriber createSubscriber(String subject, TransportListener<GenericMessage> listener, Class<G> clazz, Converter<W, G> converter) {
 	    return new MockSubscriber();
 	}
 	

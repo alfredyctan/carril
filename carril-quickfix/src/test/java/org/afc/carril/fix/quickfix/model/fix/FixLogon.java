@@ -3,7 +3,7 @@ package org.afc.carril.fix.quickfix.model.fix;
 import org.afc.carril.annotation.AnnotatedMapping;
 import org.afc.carril.message.FixMessage;
 
-public class FixLogin implements FixMessage {
+public class FixLogon implements FixMessage {
 
 	private static final long serialVersionUID = -1152225918988882483L;
 

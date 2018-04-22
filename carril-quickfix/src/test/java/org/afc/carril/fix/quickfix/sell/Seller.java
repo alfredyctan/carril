@@ -28,10 +28,10 @@ public class Seller implements CommandLineRunner {
 	@Override
 	public void run(String... arg0) throws Exception {
 		transport.init();
-		transport.subscribe("FIX.4.2:SELL-BUY", new TransportListener() {
+		transport.subscribe("FIX.4.2:SELL-BUY", new TransportListener<FixMessage>() {
 			
 			@Override
-			public GenericMessage onMessage(GenericMessage message) {
+			public FixMessage onMessage(FixMessage message) {
 				System.out.println("message received " + message);
 				return null;
 			}

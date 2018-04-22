@@ -4,9 +4,9 @@ import java.util.concurrent.ExecutorService;
 
 import org.afc.carril.message.GenericMessage;
 
-public interface TransportListener {
+public interface TransportListener<G extends GenericMessage> {
 
-	public GenericMessage onMessage(GenericMessage message);
+	public G onMessage(G message);
 
 	public default ExecutorService getExecutorService() {
 		return null;

@@ -1,6 +1,6 @@
 package org.afc.carril.fix.quickfix.model;
 
-public interface Login {
+public interface Logon {
 
 	public Integer getBodyLength();
 
