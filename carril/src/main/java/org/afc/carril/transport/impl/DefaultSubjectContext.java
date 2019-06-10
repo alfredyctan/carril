@@ -7,6 +7,9 @@ import org.afc.carril.publisher.Publisher;
 import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.SubjectContext;
 
+import lombok.ToString;
+
+@ToString
 public class DefaultSubjectContext implements SubjectContext {
 
 	protected String subject;

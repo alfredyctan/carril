@@ -6,10 +6,11 @@ import org.afc.carril.fix.quickfix.text.QuickFixMsgStringWrapper;
 import org.afc.carril.fix.tag.FixMsgType;
 import org.afc.carril.fix.tag.FixTag;
 import org.afc.carril.transport.SubjectRegistry;
-import org.afc.logging.SDC;
-import org.afc.util.ClockUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.afc.logging.SDC;
+import org.afc.util.ClockUtil;
 
 import quickfix.Application;
 import quickfix.DoNotSend;
@@ -33,24 +34,26 @@ public class QuickFixApplication implements Application {
 	
 	@Override
 	public void toAdmin(Message message, SessionID sessionId) {
+		SDC.auto(message);
 		logger.debug("[OUT][FIX] {}", new QuickFixMsgStringWrapper(message));
 	}
 
 	@Override
 	public void toApp(Message message, SessionID sessionId) throws DoNotSend {
+		SDC.auto(message);
 		logger.debug("[OUT][APP] {}", new QuickFixMsgStringWrapper(message));
 	}
 	
 	@Override
 	public void fromAdmin(Message message, SessionID sessionId) throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
-		SDC.set("GF." + SDC.hash(message));
+		SDC.set(message);
 		logger.debug("[INC][FIX] {}", new QuickFixMsgStringWrapper(message));
 		onMessage(message);
 	}
 
 	@Override
 	public void fromApp(Message message, SessionID sessionId) throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
-		SDC.set("AF." + SDC.hash(message));
+		SDC.set(message);
 		logger.debug("[INC][APP] {}", new QuickFixMsgStringWrapper(message));
 		onMessage(message);
 	}
@@ -69,15 +72,15 @@ public class QuickFixApplication implements Application {
 	public void onLogout(SessionID sessionId) {
 		Message logout = new Message();
 		logout.getHeader().setString(FixTag.BeginString.id(), sessionId.getBeginString());
-		logout.getHeader().setString(FixTag.MsgType.id(), FixMsgType.TYPE_5.id());		
+		logout.getHeader().setString(FixTag.MsgType.id(), FixMsgType._5.id());		
 		logout.getHeader().setString(FixTag.SenderCompID.id(), sessionId.getTargetCompID());
 		logout.getHeader().setString(FixTag.TargetCompID.id(), sessionId.getSenderCompID());
-		logout.getHeader().setUtcTimeStamp(FixTag.SendingTime.id(), ClockUtil.currentDate());
+		logout.getHeader().setUtcTimeStamp(FixTag.SendingTime.id(), ClockUtil.localDateTime());
 		logger.debug("Fix session logout, {}", new QuickFixMsgStringWrapper(logout));
 		try {
 			onMessage(logout);
 		} catch (FieldNotFound e) {
-            logger.error("Error on invoking logout callback", e);
+            logger.error("Error on invoking logout callback, message:[" + QuickFixUtil.toString(logout) + ']', e);
 		}
 	}
 	
@@ -89,7 +92,7 @@ public class QuickFixApplication implements Application {
 	    		try {
 	    			handler.onMessage(message);
                 } catch (Exception e) {
-                    logger.error("Error on invoking callback", e);
+                    logger.error("Error on invoking callback, message:[" + QuickFixUtil.toString(message) + ']', e);
                 }
 			}
         }

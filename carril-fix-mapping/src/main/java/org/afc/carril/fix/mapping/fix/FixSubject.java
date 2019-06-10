@@ -1,5 +1,7 @@
 package org.afc.carril.fix.mapping.fix;
 
+import org.afc.carril.message.FixMessage.Context;
+
 public class FixSubject implements BeginStringSetter, SenderCompIDSetter, TargetCompIDSetter, FixSubjectBuilder, FixSubjectParser {
 
 	private String beginString;
@@ -64,6 +66,11 @@ public class FixSubject implements BeginStringSetter, SenderCompIDSetter, Target
 	    return senderCompID + '-' + targetCompID;
 	}
 	
+	@Override
+	public Context toContext() {
+		return new Context(beginString, senderCompID, targetCompID);
+	}
+
 	private void parseSubject(String subject) {
 		String[] begin = subject.split(":");
 		if (begin.length != 2) {

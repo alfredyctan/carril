@@ -1,7 +1,0 @@
-carril:
-  buy:
-    quickfix:
-      connectionType: initiator
-      socketConnectPort: 13579  
-      socketConnectHost: 127.0.0.1
-      dataDictionary: src/main/resources/cfg/FIX42.xml

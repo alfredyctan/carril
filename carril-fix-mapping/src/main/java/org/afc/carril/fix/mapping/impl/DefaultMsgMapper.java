@@ -2,6 +2,7 @@ package org.afc.carril.fix.mapping.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.afc.carril.fix.mapping.AccessorFactory;
 import org.afc.carril.fix.mapping.Getter;
@@ -10,13 +11,17 @@ import org.afc.carril.fix.mapping.SessionState;
 import org.afc.carril.fix.mapping.Setter;
 import org.afc.carril.fix.mapping.TagMapper;
 import org.afc.carril.fix.mapping.schema.Dispatchable;
+import org.afc.carril.fix.mapping.schema.FixConv;
 import org.afc.carril.fix.mapping.schema.MsgMap;
+import org.afc.carril.fix.mapping.schema.Reference;
 import org.afc.carril.fix.mapping.schema.Tag;
 import org.afc.carril.fix.mapping.schema.Type;
-import org.afc.carril.transport.TransportException;
-import org.afc.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.afc.carril.transport.FieldNotFoundException;
+import org.afc.carril.transport.TransportException;
+import org.afc.util.ObjectUtil;
 
 public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 
@@ -34,6 +39,8 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 	private String name;
 
 	private String targetType;
+
+	private FixConv fixConv;
 
 	private class DispatchableContext {
 		
@@ -55,8 +62,9 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
         }
 	}
 		
-	public DefaultMsgMapper(AccessorFactory<S, T, Object> accessorFactory, MsgMap msgMap, SessionState state) {
+	public DefaultMsgMapper(FixConv fixConv, AccessorFactory<S, T, Object> accessorFactory, MsgMap msgMap, SessionState state) {
 		this.accessorFactory = accessorFactory;
+		this.fixConv = fixConv;
 		this.state = state;
 		this.name = msgMap.getName();
 		this.targetType= msgMap.getTargetType();
@@ -64,7 +72,7 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 			throw new TransportException("target-type is not defined for msg-map " + name);
 		}
 		this.dispatchableContexts = new ArrayList<DispatchableContext>();
-		initDispatchableContexts(msgMap, dispatchableContexts);
+		initDispatchableContexts(msgMap, dispatchableContexts); 
 		initDispatchableContexts(msgMap.getConditions(), dispatchableContexts);
 		this.tagMapper = createTagMapper(msgMap.getTags());
 	}
@@ -76,7 +84,7 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 			}
 
 			if (ObjectUtil.isAllNotNull(dispatchable.getSource(), dispatchable.getSourceIndex(), dispatchable.getSourceExpression())) {  
-				Getter<S> getter = accessorFactory.createGetter(state, dispatchable.getSource(), dispatchable.getSourceIndex(), Type.STRING);
+				Getter<S> getter = accessorFactory.createGetter(fixConv, state, dispatchable.getSource(), dispatchable.getSourceIndex(), Type.STRING);
 				contexts.add(new DispatchableContext(getter, dispatchable.getSourceExpression()));
 			}
 	
@@ -92,19 +100,16 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 
 	private TagMapper<S, T> createTagMapper(Tag rootTag) {
 		try {
-			if (rootTag.getTag() == null) {
-				Getter<S> getter = createGetter(state, rootTag);
-				Setter<S, T, Object> setter = createSetter(state, rootTag);
-		    	return accessorFactory.createTagMapper(rootTag.getName(), getter, setter, rootTag.getTargetIndex(), rootTag.getUse());
-			} else {
-				Getter<S> getter = createGetter(state, rootTag);
-				Setter<S, T, Object> setter = createSetter(state, rootTag);
-				TagMapper<S, T> tagMapper = accessorFactory.createTagMapper(rootTag.getName(), getter, setter, rootTag.getTargetIndex(), rootTag.getUse());
-				for (Tag tag : rootTag.getTag()) {
-					tagMapper.addTagMapper(createTagMapper(tag));
-				}
-				return tagMapper;
+			List<String> order = order(rootTag);
+			
+			Getter<S> getter = createGetter(state, rootTag);
+			Setter<S, T, Object> setter = createSetter(state, rootTag, order);
+			TagMapper<S, T> tagMapper = accessorFactory.createTagMapper(rootTag.getName(), getter, setter, rootTag.getTargetIndex(), rootTag.getUse());
+			
+			for (Tag tag : rootTag.getTag()) {
+				tagMapper.addTagMapper(createTagMapper(tag));
 			}
+			return tagMapper;
 		} catch (Exception e) {
 			throw new TransportException("Error on creating tag pair for " + name + '.' + rootTag.getName(), e);
 		}
@@ -112,15 +117,31 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 	
 	private Getter<S> createGetter(SessionState state, Tag tag) {
 		if (ObjectUtil.isAllNotNull(tag.getSource(), tag.getSourceIndex())) {
-			return accessorFactory.createGetter(state, tag.getSource(), tag.getSourceIndex(), tag.getType());	
+			return accessorFactory.createGetter(fixConv, state, tag.getSource(), tag.getSourceIndex(), tag.getType());	
 		} else {
 			return null;
 		}
 	}
 
-	private Setter<S, T, Object> createSetter(SessionState state, Tag tag) {
+	private Setter<S, T, Object> createSetter(SessionState state, Tag tag, List<String> order) {
 		if (ObjectUtil.isAllNotNull(tag.getTarget(), tag.getTargetIndex(), tag.getType())) {
-			return accessorFactory.createSetter(state, tag.getTarget(), tag.getTargetIndex(), tag.getType());	
+			return accessorFactory.createSetter(fixConv, state, tag.getTarget(), tag.getTargetIndex(), tag.getType(), order);	
+		} else {
+			return null;
+		}
+	}
+	
+	private static List<String> order(Tag tag) {
+		List<String> order = tag.getTag().stream()
+			.filter(t ->  
+				t.getTarget() == Reference.FIX || 
+				t.getTarget() == Reference.FIX_HEADER || 
+				t.getTarget() == Reference.FIX_TRAILER)
+			.map(t -> t.getTargetIndex())
+			.collect(Collectors.toList());
+		if (order.size() > 0) {
+			logger.info("tag:[{}], field order:{}", tag.getName(), order);
+			return order;
 		} else {
 			return null;
 		}
@@ -133,13 +154,19 @@ public class DefaultMsgMapper<S, T> implements MsgMapper<S, T> {
 	
 	@Override
 	public String match(S msg) {
-		for (DispatchableContext context:dispatchableContexts) {
-			Object value = context.getGetter().get(msg);
-			
-	    	if (value == null || !value.toString().matches(context.getExpression())) {
-	    		return null;
-	    	} 
+		try {
+			for (DispatchableContext context : dispatchableContexts) {
+				Object value = context.getGetter().get(msg);
+				
+		    	if (value == null || !value.toString().matches(context.getExpression())) {
+		    		return null;
+		    	} 
+			}
+		} catch (FieldNotFoundException e) {
+			logger.debug("{} for mapper [{}]", e.getMessage(), name);
+    		return null;
 		}
+		logger.info("matched scheme:[{}], target type:[{}]", name, targetType);
    		return targetType;
 	}
 }	

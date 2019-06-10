@@ -1,16 +1,16 @@
 package org.afc.carril.transport;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import org.afc.carril.message.GenericMessage;
+import org.afc.carril.transport.ExceptionListener;
+import org.afc.carril.transport.Transport;
+import org.afc.carril.transport.TransportException;
+import org.afc.carril.transport.TransportListener;
 import org.afc.carril.transport.Transport.State;
 import org.afc.carril.transport.mock.MockMessage;
 import org.afc.carril.transport.mock.MockPublisher;
 import org.afc.carril.transport.mock.MockSubscriber;
 import org.afc.carril.transport.mock.MockTransport;
-import org.afc.util.JUnit4Util;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -19,6 +19,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import org.afc.util.JUnitUtil;
 
 public class AbstractTransportTest {
 
@@ -44,7 +46,7 @@ public class AbstractTransportTest {
 
 	@Test
 	public void testInitStartStopDispose() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		transport.init();
@@ -57,12 +59,12 @@ public class AbstractTransportTest {
 		assertTrue("start", mockTransport.isStart());
 		assertTrue("stop", mockTransport.isStop());
 		assertTrue("dispose", mockTransport.isDispose());
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testWrongCycle() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		transport.start();
@@ -71,33 +73,33 @@ public class AbstractTransportTest {
 		assertFalse("stop", mockTransport.isStop());
 		transport.dispose();
 		assertFalse("dispose", mockTransport.isDispose());
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testPublish() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		MockPublisher publisher = (MockPublisher)transport.registerPublisher("TEST");
 		transport.publish("TEST", new MockMessage());
 		assertTrue(publisher.getPublishCount() == 1);
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testPublishRequest() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		MockMessage reply = transport.publishRequest("TEST", new MockMessage(), MockMessage.class);
 		assertTrue(reply instanceof MockMessage);
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testSubscribeBeforeStart() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		final TransportListener transportListener = context.mock(TransportListener.class);
@@ -112,12 +114,12 @@ public class AbstractTransportTest {
 
 		assertEquals("unsub 1", 0, s1.getUnsubscribeCount());
 		assertEquals("unSub 2", 0, s2.getUnsubscribeCount());
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testSubscribeAfterStart() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		final TransportListener transportListener = context.mock(TransportListener.class);
@@ -132,12 +134,12 @@ public class AbstractTransportTest {
 
 		assertEquals("unsub 1", 0, s1.getUnsubscribeCount());
 		assertEquals("unSub 2", 0, s2.getUnsubscribeCount());
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testUnsubscribe() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		final TransportListener transportListener = context.mock(TransportListener.class);
@@ -156,12 +158,12 @@ public class AbstractTransportTest {
 		transport.unsubscribe("TEST2");
 		assertEquals("unsub 1", 1, s1.getUnsubscribeCount());
 		assertEquals("unSub 2", 1, s2.getUnsubscribeCount());
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testAddAndFireTransportExceptionListener() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		final ExceptionListener listener = context.mock(ExceptionListener.class);
@@ -177,12 +179,12 @@ public class AbstractTransportTest {
 		transport.init();
 		transport.start();
 		transport.stop();
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testInitStartSubscribeStopDispose() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		MockTransport mockTransport = new MockTransport();
 		Transport transport = mockTransport;
 		final TransportListener transportListener = context.mock(TransportListener.class);
@@ -212,6 +214,6 @@ public class AbstractTransportTest {
 		transport.dispose();
 		assertTrue("dispose", mockTransport.isDispose());
 
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 }

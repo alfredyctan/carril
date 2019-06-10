@@ -1,0 +1,45 @@
+server:
+  port: 8080
+  servlet.context-path: /acceptor
+
+management.server:
+  port: 8081
+  servlet.context-path: /acceptor
+
+engine:
+  dictionary: FIX44.xml
+  threadPool: 10
+  carril:
+    file: application-acceptor.yml
+    prefix: carril.quickfix.acceptor
+  sessions: 
+  - id: FIX.4.4:SELL1-BUY
+    dictionary: FIX44.xml
+  - id: FIX.4.4:SELL2-BUY  
+    dictionary: FIX44.xml
+  captures:
+  - filter: '[%{#35}=R] && [49=BUY]'
+    file: 'target/captured/%{#49}-%{#56}/%{#8}-%{#35}.log'
+  - filter: '%{#35}!=0'
+    file: target/captured/default.log
+  autoResponses:
+  - filter: '[%{#35}=R] && [49=BUY]'
+    repository: 'target/case/%{#49}-%{#56}/%{#35}.log'
+  fixman:
+    draft: target/acceptor/draft
+    sent: target/acceptor/sent
+    error: target/acceptor/error
+    breakPattern: wait=
+    breakInclude: true
+    schedule.cron: '*/5 * * * * ?'
+    #second, minute, hour, day of month, month, day(s) of week 
+  
+  
+carril:
+  quickfix:
+    acceptor:
+      connectionType: acceptor
+      socketAcceptPort: 13579  
+      socketAcceptAddress: 127.0.0.1
+      dataDictionary: FIX44.xml
+      heartBtInt: 300

@@ -4,7 +4,6 @@ import org.afc.carril.converter.Converter;
 import org.afc.carril.message.GenericMessage;
 import org.afc.carril.transport.SubjectContext;
 import org.afc.carril.transport.SubjectRegistry;
-import org.afc.carril.transport.TransportListener;
 
 public abstract class AbstractPublisher<C extends SubjectContext> implements Publisher {
 

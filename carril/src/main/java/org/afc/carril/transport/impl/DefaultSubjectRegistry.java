@@ -4,11 +4,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.SubjectContext;
-import org.afc.carril.transport.SubjectContextFactory;
 import org.afc.carril.transport.SubjectRegistry;
 
+import lombok.ToString;
+
+@ToString
 public class DefaultSubjectRegistry<C extends SubjectContext> implements SubjectRegistry<C> {
 
 	private Map<String, C> subjectContexts;

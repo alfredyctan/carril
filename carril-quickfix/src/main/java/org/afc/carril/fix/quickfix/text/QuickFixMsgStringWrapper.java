@@ -42,7 +42,7 @@ public class QuickFixMsgStringWrapper {
 
 			if (fixTag == FixTag.MsgType) {
 				String type = field.getObject().toString();
-				buildFieldString(builder, fieldMap, tag, fixTag, FixMsgType.fromID(type).toString()) ;
+				buildFieldString(builder, fieldMap, tag, fixTag, FixMsgType.fromId(type).toString()) ;
 			} else {
 				buildFieldString(builder, fieldMap, tag, fixTag, field.getObject().toString());
 			}

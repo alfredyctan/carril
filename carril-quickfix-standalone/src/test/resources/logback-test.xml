@@ -1,0 +1,12 @@
+<configuration scan="true" scanPeriod="30 seconds">
+	<jmxConfigurator />
+	<include resource="logback-test-appender.xml" />
+	<include resource="env/${sys.env}/logback-logger.xml" optional="true" />
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="MAIN" />
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="ASYNC" />
+	</root>
+</configuration>

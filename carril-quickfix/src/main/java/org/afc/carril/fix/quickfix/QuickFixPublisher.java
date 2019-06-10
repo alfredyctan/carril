@@ -6,6 +6,7 @@ import org.afc.carril.message.GenericMessage;
 import org.afc.carril.publisher.AbstractPublisher;
 import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.TransportException;
+
 import org.afc.util.ObjectUtil;
 
 import quickfix.Message;
@@ -14,16 +15,20 @@ import quickfix.SessionNotFound;
 
 public class QuickFixPublisher extends AbstractPublisher<QuickFixSubjectContext> {
 
+	private QuickFixSubjectContext subjectContext;
+
 	protected <W, G extends GenericMessage> QuickFixPublisher(SubjectRegistry<QuickFixSubjectContext> registry, String subject, Converter<W, G> converter) {
 		super(registry, subject, null, converter);
+		subjectContext = registry.getSubjectContext(subject);
 	}
 
 	@Override
 	public <W, G extends GenericMessage> void publish(String subject, G message, Converter<W, G> converter) throws TransportException {
 		try {
-			QuickFixSubjectContext subjectContext = registry.getSubjectContext(subject);
-			FixMessage fixFormat = ObjectUtil.<FixMessage>cast(message);
-	        fixFormat.setContext(QuickFixUtil.createContext(subjectContext.getSessionID()));
+			if (message instanceof FixMessage) {
+				FixMessage fixFormat = ObjectUtil.<FixMessage>cast(message);
+		        fixFormat.setContext(QuickFixUtil.createContext(subjectContext.getSessionID()));
+			}
 			Message quickfixMessage = (Message)converter.format(message);
 	        Session.sendToTarget(quickfixMessage, subjectContext.getSessionID());
 		} catch (SessionNotFound e) {

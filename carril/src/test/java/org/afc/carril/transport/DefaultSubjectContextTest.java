@@ -1,6 +1,6 @@
 package org.afc.carril.transport;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.impl.DefaultSubjectContext;

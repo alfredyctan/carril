@@ -1,18 +1,18 @@
 package org.afc.carril.text;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
-import org.afc.carril.text.IntFormat;
-import org.afc.util.JUnit4Util;
+import org.afc.carril.text.IntegerFormat;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import org.afc.util.JUnitUtil;
 
 public class IntFormatTest {
 
@@ -34,14 +34,14 @@ public class IntFormatTest {
 
 	@Test
 	public void testIntFormat() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		try {
-			Integer i = (Integer)new IntFormat().parseObject("99");
-			assertEquals("99", new IntFormat().format(i));
+			Integer i = (Integer)new IntegerFormat().parseObject("99");
+			assertEquals("99", new IntegerFormat().format(i));
         } catch (ParseException e) {
 	        e.printStackTrace();
 	        fail(e.getMessage());
         }
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 }

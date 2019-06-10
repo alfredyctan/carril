@@ -74,7 +74,7 @@ public class FixTagTest {
 	public void testValueNotExist() {
 		JUnit4Util.startCurrentTest(getClass());
 		
-		FixTag tag = FixTag.fromID(2);
+		FixTag tag = FixTag.fromID(9992);
 		assertNull(tag);
 
 		JUnit4Util.endCurrentTest(getClass());

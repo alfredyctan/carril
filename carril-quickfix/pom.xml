@@ -10,10 +10,25 @@
 		<artifactId>afc-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
+	<properties>
+		<artifact.quickfixj.version>2.1.1</artifact.quickfixj.version>
+	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<!-- https://www.quickfixj.org/usermanual/2.1.0/installation.html#dependencies -->
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-all</artifactId>
+			<version>${artifact.quickfixj.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.afc</groupId>
@@ -47,19 +62,24 @@
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.quickfixj</groupId>
-			<artifactId>quickfixj-all</artifactId>
-			<version>1.6.2</version>
+			<groupId>org.afc.carril</groupId>
+			<artifactId>carril-fix-mapping-quickfix</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>test-jar</type>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.quickfixj</groupId>
+			<artifactId>quickfixj-all</artifactId>
+			<version>${artifact.quickfixj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.3.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

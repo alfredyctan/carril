@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.afc.org/carril/fix" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fix="http://www.afc.org/carril/fix">
+<schema targetNamespace="http://www.afc.org/carril/fix" 
+	elementFormDefault="qualified" 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:fix="http://www.afc.org/carril/fix">
 	<element name="fix-conv">
 		<complexType>
 			<sequence>
-
 				<element name="state-init" type="fix:state-init" />
-				<element name="obj-to-fix" type="fix:direction" />
-				<element name="fix-to-obj" type="fix:direction" />
+				<element name="formatter" type="fix:direction" />
+				<element name="parser" type="fix:direction" />
 			</sequence>
+			<attribute name="package-prefix" type="string"></attribute>
 		</complexType>
 	</element>
 	<complexType name="direction">
@@ -64,6 +67,7 @@
 			<enumeration value="CONST" />
 			<enumeration value="STATE" />
 			<enumeration value="OBJ" />
+			<enumeration value="CLASS"/>
 			<enumeration value="FIX" />
 			<enumeration value="SCHEMA" />
 			<enumeration value="FIX-HEADER" />
@@ -78,9 +82,28 @@
 			<enumeration value="BYTES" />
 			<enumeration value="DECIMAL" />
 			<enumeration value="STRING" />
-			<enumeration value="DATE" />
-			<enumeration value="TIME" />
-			<enumeration value="DATETIME" />
+			<enumeration value="DATE">
+				<annotation>
+					<documentation>UTC Date in YYYYMMDD</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="DATETIME">
+				<annotation>
+					<documentation>UTC DateTime in YYYYMMDD-hh:mm:ss</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="DATETIMESTAMP" >
+				<annotation>
+					<documentation>UTC DateTime with millisecond in YYYYMMDD-hh:mm:ss.SSS</documentation>
+				</annotation></enumeration>
+			<enumeration value="TIME" >
+				<annotation>
+					<documentation>UTC Time in hh:mm:ss</documentation>
+				</annotation></enumeration>
+			<enumeration value="TIMESTAMP" >
+				<annotation>
+					<documentation>UTC Time with millisecond in hh:mm:ss.SSS</documentation>
+				</annotation></enumeration>
 			<enumeration value="CHAR" />
 			<enumeration value="GROUP" />
 		</restriction>

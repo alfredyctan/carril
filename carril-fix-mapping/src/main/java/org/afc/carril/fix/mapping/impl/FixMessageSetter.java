@@ -3,11 +3,12 @@ package org.afc.carril.fix.mapping.impl;
 import java.lang.reflect.Method;
 
 import org.afc.carril.fix.mapping.Setter;
-import org.afc.carril.message.FixMessage;
+
+import org.afc.carril.annotation.Carril.Wire;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.util.AccessorMappingRegistry;
 
-public class FixMessageSetter<S, F extends FixMessage> implements Setter<S, F, Object> {
+public class FixMessageSetter<S> implements Setter<S, Object, Object> {
 
 	private String index; 
 	
@@ -16,12 +17,12 @@ public class FixMessageSetter<S, F extends FixMessage> implements Setter<S, F, O
     }
 	
 	@Override
-	public void set(S source, F target, Object value) {
+	public void set(S source, Object target, Object value) {
 		try {
 			if (value == null) {
 				throw new IllegalArgumentException("No value set to [" + index + ']');
 			}
-			Method method = AccessorMappingRegistry.getFixBodyMapping(target, index).getSetMethod();
+			Method method = AccessorMappingRegistry.getMapping(Wire.Fix, target, index).getSetMethod();
 	        method.invoke(target, value);
 		} catch (IllegalArgumentException iae) {
 			throw iae;

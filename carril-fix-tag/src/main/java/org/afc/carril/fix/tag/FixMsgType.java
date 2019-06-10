@@ -1,45 +1,135 @@
 package org.afc.carril.fix.tag;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.afc.util.EnumUtil;
+
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 
+@Accessors(fluent=true)
+@Getter
 public enum FixMsgType {
 
-	TYPE_h  ("h",   "Trading Session Status"               ),
-	TYPE_U4 ("U4",  "Initialize"                           ),
-	TYPE_U1 ("U1",  "Application Ping"                     ),
-	TYPE_U2 ("U2",  "Application Ping Reply"               ),
-	TYPE_UB ("UB",  "TradeInfo Request"                    ),
-	TYPE_B  ("B",   "News"                                 ),
-	TYPE_R  ("R",   "Quote Request"                        ),
-	TYPE_S  ("S",   "Quote"                                ),
-	TYPE_Z  ("Z",   "Quote Cancel"                         ),
-	TYPE_V  ("V",   "Market Data Request"                  ),
-	TYPE_W  ("W",   "Market Data Snapshot Full Refresh"    ),
-	TYPE_Y  ("Y",   "Market Data Request Reject"           ),
-	TYPE_U3 ("U3",  "Order Timeout"                        ),
-	TYPE_Q  ("Q",   "Don't Know Trade"                     ),
-	TYPE_b  ("b",   "Quote Acknowledgement"                ),
-	TYPE_D  ("D",   "New Order - Single"                   ),
-	TYPE_8  ("8",   "Execution Report / Order Status Reply"),
-	TYPE_j  ("j",   "Business Message Reject"              ),
-	TYPE_H  ("H",   "Order Status Request"                 ),
-	TYPE_UAF("UAF", "Order Mass Status Request"            ),
-	TYPE_J  ("J",   "Allocation"                           ),
-	TYPE_P  ("P",   "Allocation ACK"                       ),
-	TYPE_A  ("A",   "Logon"                                ),
-	TYPE_5  ("5",   "Logout"                               ),
-	TYPE_0  ("0",   "Heartbeat"                            ),
-	TYPE_1  ("1",   "TestRequest"                          );
+	_0 ("0","Heartbeat"),
+	_1 ("1","TestRequest"),
+	_2 ("2","ResendRequest"),
+	_3 ("3","Reject"),
+	_4 ("4","SequenceReset"),
+	_5 ("5","Logout"),
+	_6 ("6","IOI"),
+	_7 ("7","Advertisement"),
+	_8 ("8","ExecutionReport"),
+	_9 ("9","OrderCancelReject"),
+	A ("A","Logon"),
+	AA("AA","DerivativeSecurityList"),
+	AB("AB","NewOrderMultileg"),
+	AC("AC","MultilegOrderCancelReplace"),
+	AD("AD","TradeCaptureReportRequest"),
+	AE("AE","TradeCaptureReport"),
+	AF("AF","OrderMassStatusRequest"),
+	AG("AG","QuoteRequestReject"),
+	AH("AH","RFQRequest"),
+	AI("AI","QuoteStatusReport"),
+	AJ("AJ","QuoteResponse"),
+	AK("AK","Confirmation"),
+	AL("AL","PositionMaintenanceRequest"),
+	AM("AM","PositionMaintenanceReport"),
+	AN("AN","RequestForPositions"),
+	AO("AO","RequestForPositionsAck"),
+	AP("AP","PositionReport"),
+	AQ("AQ","TradeCaptureReportRequestAck"),
+	AR("AR","TradeCaptureReportAck"),
+	AS("AS","AllocationReport"),
+	AT("AT","AllocationReportAck"),
+	AU("AU","ConfirmationAck"),
+	AV("AV","SettlementInstructionRequest"),
+	AW("AW","AssignmentReport"),
+	AX("AX","CollateralRequest"),
+	AY("AY","CollateralAssignment"),
+	AZ("AZ","CollateralResponse"),
+	B ("B","News"),
+	BA("BA","CollateralReport"),
+	BB("BB","CollateralInquiry"),
+	BC("BC","NetworkCounterpartySystemStatusRequest"),
+	BD("BD","NetworkCounterpartySystemStatusResponse"),
+	BE("BE","UserRequest"),
+	BF("BF","UserResponse"),
+	BG("BG","CollateralInquiryAck"),
+	BH("BH","ConfirmationRequest"),
+	BI("BI","TradingSessionListRequest"),
+	BJ("BJ","TradingSessionList"),
+	BK("BK","SecurityListUpdateReport"),
+	BL("BL","AdjustedPositionReport"),
+	BM("BM","AllocationInstructionAlert"),
+	BN("BN","ExecutionAcknowledgement"),
+	BO("BO","ContraryIntentionReport"),
+	BP("BP","SecurityDefinitionUpdateReport"),
+	BQ("BQ","SettlementObligationReport"),
+	BR("BR","DerivativeSecurityListUpdateReport"),
+	BS("BS","TradingSessionListUpdateReport"),
+	BT("BT","MarketDefinitionRequest"),
+	BU("BU","MarketDefinition"),
+	BV("BV","MarketDefinitionUpdateReport"),
+	BW("BW","ApplicationMessageRequest"),
+	BX("BX","ApplicationMessageRequestAck"),
+	BY("BY","ApplicationMessageReport"),
+	BZ("BZ","OrderMassActionReport"),
+	C ("C","Email"),
+	CA("CA","OrderMassActionRequest"),
+	CB("CB","UserNotification"),
+	CC("CC","StreamAssignmentRequest"),
+	CD("CD","StreamAssignmentReport"),
+	CE("CE","StreamAssignmentReportACK"),
+	D ("D","NewOrderSingle"),
+	E ("E","NewOrderList"),
+	F ("F","OrderCancelRequest"),
+	G ("G","OrderCancelReplaceRequest"),
+	H ("H","OrderStatusRequest"),
+	J ("J","AllocationInstruction"),
+	K ("K","ListCancelRequest"),
+	L ("L","ListExecute"),
+	M ("M","ListStatusRequest"),
+	N ("N","ListStatus"),
+	P ("P","AllocationInstructionAck"),
+	Q ("Q","DontKnowTrade"),
+	R ("R","QuoteRequest"),
+	S ("S","Quote"),
+	T ("T","SettlementInstructions"),
+	V ("V","MarketDataRequest"),
+	W ("W","MarketDataSnapshotFullRefresh"),
+	X ("X","MarketDataIncrementalRefresh"),
+	Y ("Y","MarketDataRequestReject"),
+	Z ("Z","QuoteCancel"),
+	a ("a","QuoteStatusRequest"),
+	b ("b","MassQuoteAcknowledgement"),
+	c ("c","SecurityDefinitionRequest"),
+	d ("d","SecurityDefinition"),
+	e ("e","SecurityStatusRequest"),
+	f ("f","SecurityStatus"),
+	g ("g","TradingSessionStatusRequest"),
+	h ("h","TradingSessionStatus"),
+	i ("i","MassQuote"),
+	j ("j","BusinessMessageReject"),
+	k ("k","BidRequest"),
+	l ("l","BidResponse"),
+	m ("m","ListStrikePrice"),
+	n ("n","XMLnonFIX"),
+	o ("o","RegistrationInstructions"),
+	p ("p","RegistrationInstructionsResponse"),
+	q ("q","OrderMassCancelRequest"),
+	r ("r","OrderMassCancelReport"),
+	s ("s","NewOrderCross"),
+	t ("t","CrossOrderCancelReplaceRequest"),
+	u ("u","CrossOrderCancelRequest"),
+	v ("v","SecurityTypeRequest"),
+	w ("w","SecurityTypes"),
+	x ("x","SecurityListRequest"),
+	y ("y","SecurityList"),
+	z ("z","DerivativeSecurityListRequest");
 
-	private static final Map<String, FixMsgType> ALL_TYPES = new ConcurrentHashMap<String, FixMsgType>();
-	
-	static {
-		for(FixMsgType type : FixMsgType.values()) {
-			ALL_TYPES.put(type.id, type);
-		}
-	}	
+	private static final Map<String, FixMsgType> ALL_TYPES = EnumUtil.mapper(values(), FixMsgType::id);
 
 	private final String id;
 
@@ -53,18 +143,11 @@ public enum FixMsgType {
 		this.text = id  + '(' + desc + ')';
     }
 
-    public static FixMsgType fromID(String v) {
-    	return ALL_TYPES.get(v);
+	public static FixMsgType fromId(String id) {
+		return EnumUtil.from(ALL_TYPES, id);
 	}
 
-    public String id() {
-    	return id;
-    }
-
-    public String desc() {
-    	return desc;
-    }
-
+    @Override
 	public String toString() {
 		return text;
 	}

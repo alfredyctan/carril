@@ -3,22 +3,24 @@ package org.afc.carril.fix.mapping.quickfix;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.afc.carril.annotation.Carril.Wire;
 import org.afc.carril.fix.mapping.Getter;
 import org.afc.carril.fix.mapping.Setter;
 import org.afc.carril.fix.mapping.TagMapper;
 import org.afc.carril.fix.mapping.schema.Use;
-import org.afc.carril.message.FixMessage;
 import org.afc.carril.transport.AccessorMapping;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.util.AccessorMappingRegistry;
-import org.afc.util.ObjectUtil;
-import org.afc.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.afc.util.ObjectUtil;
+
+import lombok.ToString;
 import quickfix.Group;
 
-public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message, FixMessage> {
+@ToString
+public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message, Object> {
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixToFixMessageTagMapper.class);
 
@@ -26,15 +28,15 @@ public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message
 
 	private Getter<quickfix.Message> getter;
 
-	private Setter<quickfix.Message, FixMessage, Object> setter;
+	private Setter<quickfix.Message, Object, Object> setter;
 	
 	private String targetIndex;
 
 	private Use use;
 
-	private List<TagMapper<quickfix.Message, FixMessage>> tagMappers;
+	private List<TagMapper<quickfix.Message, Object>> tagMappers;
 
-	public QuickFixToFixMessageTagMapper(String name, Getter<quickfix.Message> getter, Setter<quickfix.Message, FixMessage, Object> setter, String targetIndex, Use use) {
+	public QuickFixToFixMessageTagMapper(String name, Getter<quickfix.Message> getter, Setter<quickfix.Message, Object, Object> setter, String targetIndex, Use use) {
 		this.name = name;
 		this.getter = getter;
 		this.setter = setter;
@@ -43,15 +45,15 @@ public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message
 	}
 
 	@Override
-	public void addTagMapper(TagMapper<quickfix.Message, FixMessage> tagMapper) {
+	public void addTagMapper(TagMapper<quickfix.Message, Object> tagMapper) {
 		if (tagMappers == null) {
-			tagMappers = new LinkedList<TagMapper<quickfix.Message, FixMessage>>();
+			tagMappers = new LinkedList<TagMapper<quickfix.Message, Object>>();
 		}
 		tagMappers.add(tagMapper);
 	}
 
 	@Override
-	public FixMessage map(quickfix.Message source, FixMessage target) {
+	public Object map(quickfix.Message source, Object target) {
 		try {
 			if (ObjectUtil.isAnyoneNull(getter, setter)) {
 				// handle root tag <tags> under <msg-map> without getter setter
@@ -73,31 +75,28 @@ public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message
 		}
 	}
 
-	private FixMessage mapRootTag(quickfix.Message source, FixMessage target) {
-		if (tagMappers == null) {
-			System.out.println("wait");
-		}
-		for(TagMapper<quickfix.Message, FixMessage> tagMapper : tagMappers) {
+	private Object mapRootTag(quickfix.Message source, Object target) {
+		for(TagMapper<quickfix.Message, Object> tagMapper : tagMappers) {
 			tagMapper.map(source, target);
 		}
 		return target;
 	}
 
-    private FixMessage mapRepeatingGroup(quickfix.Message source, FixMessage target) {
+    private Object mapRepeatingGroup(quickfix.Message source, Object target) {
 		List<Group> values = ObjectUtil.cast(getter.get(source));
 		if (values.size() == 0) {
 			return target;
 		}
-		AccessorMapping accessorMapping = AccessorMappingRegistry.getFixBodyMapping(target, targetIndex);
+		AccessorMapping accessorMapping = AccessorMappingRegistry.getMapping(Wire.Fix, target, targetIndex);
 		
-		Class<FixMessage> clazz = ObjectUtil.cast(accessorMapping.getImplClass());
-		List<FixMessage> fixFormats = new LinkedList<FixMessage>();
+		Class<Object> clazz = ObjectUtil.cast(accessorMapping.getImplClass());
+		List<Object> fixFormats = new LinkedList<Object>();
 		for (Group group:values) {
-			FixMessage fixFormat = ObjectUtil.newInstance(clazz);
+			Object fixFormat = ObjectUtil.newInstance(clazz);
 			quickfix.Message groupFields = new quickfix.Message();
 			groupFields.setFields(group);
 			groupFields.setGroups(group);
-			for (TagMapper<quickfix.Message, FixMessage> tagMapper:tagMappers) {
+			for (TagMapper<quickfix.Message, Object> tagMapper:tagMappers) {
 				tagMapper.map(groupFields, fixFormat);
 			}
 			fixFormats.add(fixFormat);
@@ -106,7 +105,7 @@ public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message
 		return target;
 	}	
 	
-	private FixMessage mapSingleField(quickfix.Message source, FixMessage target) {
+	private Object mapSingleField(quickfix.Message source, Object target) {
 		try {
 			Object value = getter.get(source);
 			setter.set(source, target, value);
@@ -119,18 +118,5 @@ public class QuickFixToFixMessageTagMapper implements TagMapper<quickfix.Message
 				return target;
 			}
 		}
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		StringUtil.startToString(builder);
-		StringUtil.buildToString(builder, "name", name);
-		StringUtil.buildToString(builder, "getter", getter);
-		StringUtil.buildToString(builder, "setter", setter);
-		StringUtil.buildToString(builder, "use", use);
-		StringUtil.buildToString(builder, "tagMappers", tagMappers);
-		StringUtil.endToString(builder);
-	    return builder.toString();
 	}
 }

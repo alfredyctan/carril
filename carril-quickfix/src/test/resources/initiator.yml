@@ -1,0 +1,14 @@
+carril:
+  quickfix:
+    initiator:
+      connectionType: initiator
+      sessions:
+        default:
+          socketConnects:
+          - port: 24680  
+            host: 127.0.0.1
+          dataDictionary: FIX44.xml
+        sell0:
+          id: FIX.4.4:BUY-SELL0
+          heartBtInt: 120
+          

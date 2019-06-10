@@ -7,18 +7,24 @@ import org.afc.carril.message.GenericMessage;
 import org.afc.carril.subscriber.AbstractSubscriber;
 import org.afc.carril.transport.SubjectRegistry;
 import org.afc.carril.transport.TransportListener;
-import org.afc.logging.SDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.afc.logging.SDC;
+import org.afc.util.StopWatch;
+
 import quickfix.Message;
+import quickfix.Session;
 
 public class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContext> implements QuickFixMessageListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(QuickFixSubscriber.class);
 	
+	private QuickFixSubjectContext subjectContext;
+
 	public <W, G extends GenericMessage> QuickFixSubscriber(SubjectRegistry<QuickFixSubjectContext> registry, String subject, TransportListener<GenericMessage> listner, Class<GenericMessage> clazz, Converter<W, G> converter) {
         super(registry, subject, listner, clazz, converter);
+		subjectContext = registry.getSubjectContext(subject);
     }
 
 	@Override
@@ -31,16 +37,28 @@ public class QuickFixSubscriber extends AbstractSubscriber<QuickFixSubjectContex
 				try {
 					// Convert to generic format in adaptor
 					@SuppressWarnings("unchecked")
+					StopWatch watch = new StopWatch(4);
+					watch.tick();
 					GenericMessage convertedData = converter.parse(message, clazz);
+					watch.tick();
 
 					// process the message
 					if (convertedData == null) {
-						logger.trace("cannot convert any message to handle : {}", subject);
+						logger.debug("no converted data to process, parse(ms):[{}]", watch.millis(0));
 						return;
 					}
-					listener.onMessage(convertedData);
+
+					GenericMessage processed = listener.onMessage(convertedData);
+					watch.tick();
+					if (processed == null) {
+						logger.debug("no auto response, parse(ms):[{}], process(ms):[{}]", watch.millis(0), watch.millis(1));
+					} else {
+						Message response = (Message)converter.format(processed);
+						watch.tick();
+				        Session.sendToTarget(response, subjectContext.getSessionID());
+						logger.debug("auto response, parse(ms):[{}], process(ms):[{}], format(ms):[{}]", watch.millis(0), watch.millis(1), watch.millis(2));
+					}
 					
-					//Fix is async-only protocal
 					logger.trace("message handled : {}", subject);
 				} catch (Exception e) {
 					logger.error("Exception occurs, reprocess is required.", e);

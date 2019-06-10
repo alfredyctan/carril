@@ -1,22 +1,23 @@
 package org.afc.carril.fix.mapping.quickfix;
 
+import java.util.List;
+
 import org.afc.carril.fix.mapping.Setter;
 import org.afc.carril.fix.mapping.schema.Type;
-import org.afc.carril.message.FixMessage;
 
 import quickfix.FieldMap;
 import quickfix.Message;
 
-public class QuickFixTrailerSetter implements Setter<FixMessage, Message, Object> {
+public class QuickFixTrailerSetter implements Setter<Object, Message, Object> {
 	
-	private Setter<FixMessage, FieldMap, Object> setter;
+	private Setter<Object, FieldMap, Object> setter;
 	
-	public QuickFixTrailerSetter(String index, Type type) {
-		setter = new QuickFixFieldSetter(index, type);
+	public QuickFixTrailerSetter(String index, Type type, List<String> order) {
+		setter = new QuickFixFieldSetter(index, type, order);
     }
 	
 	@Override
-	public void set(FixMessage source, Message target, Object value) {
+	public void set(Object source, Message target, Object value) {
 		setter.set(source, target.getTrailer(), value);
 	}
 }

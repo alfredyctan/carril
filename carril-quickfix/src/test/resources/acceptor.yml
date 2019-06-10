@@ -1,0 +1,9 @@
+carril:
+  quickfix:
+    acceptor:
+      connectionType: acceptor
+      socketAcceptPort: 13579  
+      socketAcceptAddress: 127.0.0.1
+      sessions:
+        default:
+          dataDictionary: FIX44.xml

@@ -1,24 +1,36 @@
 package org.afc.carril.fix.quickfix.model;
 
-public interface Logon {
+import org.afc.carril.annotation.Carril;
+import org.afc.carril.annotation.Carril.Wire;
+import org.afc.carril.message.FixMessage;
 
-	public Integer getBodyLength();
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
-	public void setBodyLength(Integer bodyLength);
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class Logon implements FixMessage {
 
-	public Integer getEncryptMethod();
+	private static final long serialVersionUID = -1152225918988882483L;
 
-	public void setEncryptMethod(Integer encryptMethod);
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	@Accessors(chain = false)
+	private Context context;
+	
+	@Carril(wire = Wire.Fix)
+	private Integer encryptMethod;
 
-	public Integer getHeartBtInt();
+	@Carril(wire = Wire.Fix)
+	private Integer heartBtInt;
 
-	public void setHeartBtInt(Integer heartBtInt);
+	@Carril(wire = Wire.Fix)
+	private Boolean resetSeqNumFlag;
 
-	public String getResetSeqNumFlag();
-
-	public void setResetSeqNumFlag(String resetSeqNumFlag);
-
-	public Integer getCheckSum();
-
-	public void setCheckSum(Integer checkSum);
 }

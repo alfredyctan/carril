@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fix-conv xmlns="http://www.afc.org/carril/fix" package-prefix="org.afc.carril.sample">
+	<parser>
+		<msg-map name="A" source="FIX-HEADER" source-index="${35}" source-expression="A" target-type="org.afc.carril.fix.quickfix.model.Logon">
+			<tags>
+				<tag name="encryptMethod"   type="INT"    source="FIX" source-index="${98}"  target="OBJ" target-index="encryptMethod"   use="REQ" />
+				<tag name="heartBtInt"      type="INT"    source="FIX" source-index="${108}" target="OBJ" target-index="heartBtInt"      use="REQ" />
+				<tag name="resetSeqNumFlag" type="BOOLEAN" source="FIX" source-index="${141}" target="OBJ" target-index="resetSeqNumFlag" use="REQ" />
+			</tags>
+		</msg-map>
+		<msg-map name="R" source="FIX-HEADER" source-index="${35}" source-expression="R" target-type="org.afc.carril.fix.quickfix.model.QuoteRequest">
+			<tags>
+				<tag name="QuoteReqID" type="STRING" source="FIX" source-index="${131}"  target="OBJ" target-index="quoteReqID" use="OPT" />
+				<tag name="Symbols"    type="GROUP"  source="FIX" source-index="${146}"  target="OBJ" target-index="symbols"    use="OPT">
+					<tag name="Symbol"                 type="STRING" source="FIX" source-index="${55}"   target="OBJ" target-index="symbol"                 use="OPT" />
+					<tag name="SecurityID"             type="STRING" source="FIX" source-index="${48}"   target="OBJ" target-index="securityID"             use="OPT" />
+					<tag name="SecurityIDSource"       type="STRING" source="FIX" source-index="${22}"   target="OBJ" target-index="securityIDSource"       use="OPT" />
+					<tag name="SecurityDesc"           type="STRING" source="FIX" source-index="${107}"  target="OBJ" target-index="securityDesc"           use="OPT" />
+					<tag name="EncodedSecurityDescLen" type="INT"    source="FIX" source-index="${350}"  target="OBJ" target-index="encodedSecurityDescLen" use="OPT" />
+					<tag name="EncodedSecurityDesc"    type="STRING" source="FIX" source-index="${351}"  target="OBJ" target-index="encodedSecurityDesc"    use="OPT" />
+					<tag name="Side"                   type="CHAR"   source="FIX" source-index="${54}"   target="OBJ" target-index="side"                   use="OPT" />
+				</tag>
+			</tags>
+		</msg-map>
+	</parser>
+	<formatter>
+		<msg-map name="Quote" source="CLASS" source-index="simple" source-expression="Quote" target-type="S">
+			<tags>
+				<tag name="QuoteReqID"             type="STRING" source="OBJ" source-index="${quoteReqID}"             target="FIX" target-index="131"  use="OPT" />
+				<tag name="QuoteID"                type="STRING" source="OBJ" source-index="${quoteID}"                target="FIX" target-index="117"  use="OPT" />
+				<tag name="Symbol"                 type="STRING" source="OBJ" source-index="${symbol}"                 target="FIX" target-index="55"   use="OPT" />
+				<tag name="SecurityID"             type="STRING" source="OBJ" source-index="${securityID}"             target="FIX" target-index="48"   use="OPT" />
+				<tag name="SecurityIDSource"       type="STRING" source="OBJ" source-index="${securityIDSource}"       target="FIX" target-index="22"   use="OPT" />
+				<tag name="EncodedSecurityDescLen" type="INT"    source="OBJ" source-index="${encodedSecurityDescLen}" target="FIX" target-index="350"  use="OPT" />
+				<tag name="EncodedSecurityDesc"    type="STRING" source="OBJ" source-index="${encodedSecurityDesc}"    target="FIX" target-index="351"  use="OPT" />
+				<tag name="Side"                   type="CHAR"   source="OBJ" source-index="${side}"                   target="FIX" target-index="54"   use="OPT" />
+			</tags>
+		</msg-map>
+	</formatter>
+</fix-conv>

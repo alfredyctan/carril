@@ -1,0 +1,33 @@
+server:
+  port: 8090
+  servlet.context-path: /initiator
+
+management.server:
+  port: 8091
+  servlet.context-path: /initiator
+
+engine:
+  dictionary: FIX44.xml
+  carril:
+    file: application-initiator.yml
+    prefix: carril.quickfix.initiator
+  sessions: 
+  - id: FIX.4.4:BUY-SELL1
+    dictionary: FIX44.xml
+  - id: FIX.4.4:BUY-SELL2  
+    dictionary: FIX44.xml
+  fixman:
+    draft: target/initiator/draft
+    sent: target/initiator/sent
+    schedule:
+      cron: '*/5 * * * * ?'
+    #second, minute, hour, day of month, month, day(s) of week 
+
+
+carril:
+  quickfix:
+    initiator:
+      connectionType: initiator
+      socketConnectPort: 13579  
+      socketConnectHost: 127.0.0.1
+      dataDictionary: FIX44.xml

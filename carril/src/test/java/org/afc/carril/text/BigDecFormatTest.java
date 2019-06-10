@@ -1,19 +1,19 @@
 package org.afc.carril.text;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-import org.afc.carril.text.BigDecFormat;
-import org.afc.util.JUnit4Util;
+import org.afc.carril.text.BigDecimalFormat;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import org.afc.util.JUnitUtil;
 
 public class BigDecFormatTest {
 
@@ -35,15 +35,15 @@ public class BigDecFormatTest {
 
 	@Test
 	public void testBigDecFormat() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		try {
-			BigDecimal bigDecimal = (BigDecimal)new BigDecFormat().parseObject("1.22222");
-			assertEquals("1.22222", new BigDecFormat().format(bigDecimal));
+			BigDecimal bigDecimal = (BigDecimal)new BigDecimalFormat().parseObject("1.22222");
+			assertEquals("1.22222", new BigDecimalFormat().format(bigDecimal));
         } catch (ParseException e) {
 	        e.printStackTrace();
 	        fail(e.getMessage());
         }
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 
 }

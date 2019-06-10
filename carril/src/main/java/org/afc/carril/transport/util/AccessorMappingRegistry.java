@@ -3,37 +3,45 @@ package org.afc.carril.transport.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Format;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
-import org.afc.carril.annotation.AnnotatedMapping;
-import org.afc.carril.annotation.AnnotatedMapping.Section;
-import org.afc.carril.annotation.AnnotatedMapping.Wire;
-import org.afc.carril.message.GenericMessage;
+import org.afc.carril.annotation.Carril;
+import org.afc.carril.annotation.Carril.Section;
+import org.afc.carril.annotation.Carril.Wire;
 import org.afc.carril.transport.AccessorMapping;
 import org.afc.carril.transport.TransportException;
+
 import org.afc.util.StringUtil;
 
 public class AccessorMappingRegistry {
 
-	private static final int GENERIC = 0;
-	
-	private static final int FIX = 1;
-	
-	private static final int HEADER = 0;
-	
-	private static final int BODY = 1;
+	private static final String SET = "set";
 
-	private static final int TRAILER = 2;
+	private static final String GET = "get";
+	
+	private static final String IS = "is";
 
-	private static ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>[][] mappings = new ThreadLocal[2][3];
+	@SuppressWarnings("unchecked")
+	private final static ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>[] mappings = new ThreadLocal[Wire.values().length];
 	static {
 		for (int i = 0; i < mappings.length; i++) {
-			for (int j = 0; j < mappings[i].length; j++) {
-				mappings[i][j] = new ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>() {
+			mappings[i] = new ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>() {
+				@Override
+				protected Map<Class<?>, Map<String, AccessorMapping>> initialValue() {
+					return new ConcurrentHashMap<>();
+				}
+			};
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private final static ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>[][] sectionMappings = new ThreadLocal[Wire.values().length][Section.values().length];
+	static {
+		for (int i = 0; i < sectionMappings.length; i++) {
+			for (int j = 0; j < sectionMappings[i].length; j++) {
+				sectionMappings[i][j] = new ThreadLocal<Map<Class<?>, Map<String, AccessorMapping>>>() {
 					@Override
 					protected Map<Class<?>, Map<String, AccessorMapping>> initialValue() {
 						return new ConcurrentHashMap<>();
@@ -43,88 +51,48 @@ public class AccessorMappingRegistry {
 		}
 	}
 	
-	public static <T extends GenericMessage> AccessorMapping getHeaderMapping(T message, String index) {
-		return getMapping(mappings[GENERIC][HEADER].get(), Wire.Generic, Section.Header, message, index);
+	public static <T> AccessorMapping getMapping(Wire wire, T message, String tag) {
+		return getMappings(mappings[wire.index()].get(), wire, null, message).get(tag);
 	}
 
-	public static <T extends GenericMessage> AccessorMapping getBodyMapping(T message, String index) {
-		return getMapping(mappings[GENERIC][BODY].get(), Wire.Generic, Section.Body, message, index);
+	public static <T> Map<String, AccessorMapping> getMappings(Wire wire, T message) {
+		return getMappings(mappings[wire.index()].get(), wire, null, message);
 	}
 
-	public static <T extends GenericMessage> AccessorMapping getTrailerMapping(T message, String index) {
-		return getMapping(mappings[GENERIC][TRAILER].get(), Wire.Generic, Section.Trailer, message, index);
+	public static <T> AccessorMapping getMapping(Wire wire, Section section, T message, String tag) {
+		return getMappings(sectionMappings[wire.index()][section.index()].get(), wire, section, message).get(tag);
 	}
 
-	public static <T extends GenericMessage> AccessorMapping getFixHeaderMapping(T message, String index) {
-		return getMapping(mappings[FIX][HEADER].get(), Wire.Fix, Section.Header, message, index);
-	}
-
-	public static <T extends GenericMessage> AccessorMapping getFixBodyMapping(T message, String index) {
-		return getMapping(mappings[FIX][BODY].get(), Wire.Fix, Section.Body, message, index);
-	}
-
-	public static <T extends GenericMessage> AccessorMapping getFixTrailerMapping(T message, String index) {
-		return getMapping(mappings[FIX][TRAILER].get(), Wire.Fix, Section.Trailer, message, index);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getHeaderMapping(T message) {
-		return getMappings(mappings[GENERIC][HEADER].get(), Wire.Generic, Section.Header, message);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getBodyMapping(T message) {
-		return getMappings(mappings[GENERIC][BODY].get(), Wire.Generic, Section.Body, message);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getTrailerMapping(T message) {
-		return getMappings(mappings[GENERIC][TRAILER].get(), Wire.Generic, Section.Trailer, message);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getFixHeaderMapping(T message) {
-		return getMappings(mappings[FIX][HEADER].get(), Wire.Fix, Section.Header, message);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getFixBodyMapping(T message) {
-		return getMappings(mappings[FIX][BODY].get(), Wire.Fix, Section.Body, message);
-	}
-
-	public static <T extends GenericMessage> Map<String, AccessorMapping> getFixTrailerMapping(T message) {
-		return getMappings(mappings[FIX][TRAILER].get(), Wire.Fix, Section.Trailer, message);
-	}
-
-
-	private static <T extends GenericMessage> AccessorMapping getMapping(Map<Class<?>, Map<String, AccessorMapping>> classMappings, Wire wire, Section section, T message, String index) {
-		return getMappings(classMappings, wire, section, message).get(index);
+	public static <T> Map<String, AccessorMapping> getMappings(Wire wire, Section section, T message) {
+		return getMappings(sectionMappings[wire.index()][section.index()].get(), wire, section, message);
 	}
 	
-	private static <T extends GenericMessage> Map<String, AccessorMapping> getMappings(Map<Class<?>, Map<String, AccessorMapping>> classMappings, Wire wire, Section section, T message) {
-		Map<String, AccessorMapping> indexMapping = classMappings.get(message.getClass());
-		if (indexMapping == null) {
-			indexMapping = createMappings(wire, section, message);
-			classMappings.put(message.getClass(), indexMapping);
+	private static <T> Map<String, AccessorMapping> getMappings(Map<Class<?>, Map<String, AccessorMapping>> classMappings, Wire wire, Section section, T message) {
+		Map<String, AccessorMapping> tagMappings = classMappings.get(message.getClass());
+		if (tagMappings == null) {
+			tagMappings = createMappings(wire, section, message.getClass(), new HashMap<>());
+			classMappings.put(message.getClass(), tagMappings);
 		}
-		return indexMapping;
+		return tagMappings;
 	}
-
-	private static Map<String, AccessorMapping> createMappings(Wire wire, Section section, Object object) {
-		return createMappings(wire, section, object.getClass(), new HashMap<>());
-	}
-
-	private static Map<String, AccessorMapping> createMappings(Wire wire, Section section, Class<?> clazz, Map<String, AccessorMapping> indexMappings) {
+	
+	private static Map<String, AccessorMapping> createMappings(Wire wire, Section section, Class<?> clazz, Map<String, AccessorMapping> tagMappings) {
 		if (clazz.getSuperclass() != null) {
-			createMappings(wire, section, clazz.getSuperclass(), indexMappings);
+			createMappings(wire, section, clazz.getSuperclass(), tagMappings);
 		}
 		for (Field field : clazz.getDeclaredFields()) {
-			AnnotatedMapping ann = field.getAnnotation(AnnotatedMapping.class);
-			if (ann == null || ann.section() != section) {
+			Carril ann = field.getAnnotation(Carril.class);
+			if (ann == null || (section != null && ann.section() != section)) {
 				continue;
 			}
 			if (ann.wire() == Wire.Generic || ann.wire() == wire) {
 				String name = StringUtil.hasValue(ann.name()) ? ann.name() : field.getName();
-				indexMappings.put(
+				tagMappings.put(
 					name, 
 					createAccessorMapping(
 						clazz, 
 						name, 
+						ann.section(),
 						StringUtil.hasValue(ann.getter()) ? ann.getter() : deriveGetter(field), 
 						StringUtil.hasValue(ann.setter()) ? ann.setter() : deriveSetter(field), 
 						ann.declare() != Void.class ? ann.declare() : field.getType(),
@@ -134,37 +102,38 @@ public class AccessorMappingRegistry {
 				);
 			}
 		}
-		return indexMappings;
+		return tagMappings;
 	}
 	
 	private static String deriveGetter(Field field) {
-		String prefix = (field.getType() == Boolean.class || field.getType() == boolean.class) ? "is" : "get";
+//		String prefix = (field.getType() == Boolean.class || field.getType() == boolean.class) ? IS : GET;
+		String prefix = (field.getType() == boolean.class) ? IS : GET; // for lombok generated Boolean getter 
 		return prefix + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
 	}
 
 	private static String deriveSetter(Field field) {
-		return "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+		return SET + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
 	}
 
-	private static Format createFormat(AnnotatedMapping ann) {
+	private static Format createFormat(Carril ann) {
 		try {
-			if (Void.class.equals(ann.formatter())) {
+			if (Void.class.equals(ann.format())) {
 				return null;
 			}
 			
-			if (!"".equals(ann.format())) {
-				return (Format)ann.formatter().getConstructor(String.class).newInstance(ann.format());
+			if (!"".equals(ann.pattern())) {
+				return (Format)ann.format().getConstructor(String.class).newInstance(ann.pattern());
 			} else {
-				return (Format)ann.formatter().getConstructor().newInstance();
+				return (Format)ann.format().getConstructor().newInstance();
 			}
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			throw new TransportException("error on create format : " + ann.formatter() + " (" + ann.format() + ")", e);
+			throw new TransportException("error on create format : " + ann.format() + " (" + ann.pattern() + ")", e);
 		}
 	}
 
-	private static AccessorMapping createAccessorMapping(Class<?> clazz, String fieldName, String getter, String setter, Class<?> declareClass, Class<?> implClass, Format format) {
+	private static AccessorMapping createAccessorMapping(Class<?> clazz, String fieldName, Section section, String getter, String setter, Class<?> declareClass, Class<?> implClass, Format format) {
 		try {
-			return new AccessorMapping(fieldName, clazz.getMethod(getter), clazz.getMethod(setter, declareClass), declareClass, implClass, format);
+			return new AccessorMapping(fieldName, section, clazz.getMethod(getter), clazz.getMethod(setter, declareClass), declareClass, implClass, format);
 		} catch (NoSuchMethodException nsme) {
 			throw new TransportException(nsme);
 		}

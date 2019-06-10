@@ -10,9 +10,10 @@ import org.afc.carril.subscriber.Subscriber;
 import org.afc.carril.transport.TransportException;
 import org.afc.carril.transport.TransportListener;
 import org.afc.carril.transport.impl.AbstractTransport;
-import org.afc.util.ObjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.afc.util.ObjectUtil;
 
 import quickfix.ConfigError;
 import quickfix.Connector;
@@ -22,7 +23,6 @@ import quickfix.FieldConvertError;
 import quickfix.FileStoreFactory;
 import quickfix.MemoryStoreFactory;
 import quickfix.RuntimeError;
-import quickfix.SLF4JLogFactory;
 import quickfix.SessionFactory;
 import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
@@ -56,7 +56,7 @@ public class QuickFixTransport extends AbstractTransport<QuickFixSubjectContext>
 		sessionFactory = new DefaultSessionFactory(
 			new QuickFixApplication(registry), 
 			(settings.getFileStorePath() == null) ? new MemoryStoreFactory() : new FileStoreFactory(sessionSettings), 
-			new SLF4JLogFactory(sessionSettings), 
+			new CarrilSLF4JLogFactory(sessionSettings), 
 			new DefaultMessageFactory()
 		);
 	    

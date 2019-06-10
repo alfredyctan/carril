@@ -5,19 +5,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.afc.carril.annotation.AnnotatedMapping.Wire;
+import org.afc.carril.annotation.Carril;
+import org.afc.carril.annotation.Carril.Wire;
 import org.afc.carril.message.GenericMessage;
 
 public class ExampleMessage implements GenericMessage {
 
-	@AnnotatedMapping(name = "PRODUCT", declare = String.class, getter = "getProduct", setter = "setProduct")
+	@Carril(name = "PRODUCT", declare = String.class, getter = "getProduct", setter = "setProduct")
 	private String product;
 
-	@AnnotatedMapping(name = "TRADE_DATE", declare = Date.class, getter = "getTradeDate", setter = "setTradeDate", formatter = SimpleDateFormat.class, format = "YYYY-MM-DD")
-	@AnnotatedMapping(wire = Wire.Fix, name = "TradeDate", declare = Date.class, getter = "getTradeDate", setter = "setTradeDate", formatter = SimpleDateFormat.class, format = "YYYY-MM-DD")
+	@Carril(name = "TRADE_DATE", declare = Date.class, getter = "getTradeDate", setter = "setTradeDate", format = SimpleDateFormat.class, pattern = "YYYY-MM-DD")
+	@Carril(wire = Wire.Fix, name = "TradeDate", declare = Date.class, getter = "getTradeDate", setter = "setTradeDate", format = SimpleDateFormat.class, pattern = "YYYY-MM-DD")
 	private Date tradeDate;
 
-	@AnnotatedMapping(name = "COMMENTS", declare = List.class, implement = ArrayList.class, getter = "getComments", setter = "setComments")
+	@Carril(name = "COMMENTS", declare = List.class, implement = ArrayList.class, getter = "getComments", setter = "setComments")
 	private List<String> comments;
 
 	public Date getTradeDate() {

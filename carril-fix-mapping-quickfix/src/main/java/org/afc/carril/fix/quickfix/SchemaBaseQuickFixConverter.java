@@ -1,7 +1,5 @@
 package org.afc.carril.fix.quickfix;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.xml.bind.JAXBContext;
@@ -17,10 +15,11 @@ import org.afc.carril.fix.mapping.quickfix.QuickFixParser;
 import org.afc.carril.fix.mapping.schema.FixConv;
 import org.afc.carril.message.FixMessage;
 import org.afc.carril.transport.TransportException;
-import org.afc.util.ObjectUtil;
-import org.codehaus.plexus.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.afc.util.FileUtil;
+import org.afc.util.ObjectUtil;
 
 import quickfix.Message;
 
@@ -38,29 +37,16 @@ public class SchemaBaseQuickFixConverter implements Converter<Message, FixMessag
 	
 	public SchemaBaseQuickFixConverter(String schemaFile) {
 		this.state = new SimpleSessionState();
-		InputStream is = null;
-		try {
+		try (InputStream is = FileUtil.resolveResourceAsStream(schemaFile)){
 			logger.info("using schema {}", schemaFile);
-			Unmarshaller unmarshaller = JAXBContext.newInstance(FixConv.class).createUnmarshaller();
-			File file = new File(schemaFile);
-			if (file.isFile()) {
-				is = new FileInputStream(file);
-			} else {
-				is = getClass().getResourceAsStream(schemaFile);
-			}
 			
-//			Schema schema;
-//			SchemaFactory schemaFactory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-//			schema = schemaFactory.newSchema(new File(schemaFile));
-//			unmarshaller.setSchema(schema);
+			Unmarshaller unmarshaller = JAXBContext.newInstance(FixConv.class).createUnmarshaller();
 			fixConv = (FixConv) unmarshaller.unmarshal(is);
 			
-			fixFormatter = new QuickFixFormatter(fixConv.getObjToFix(), state);
-			fixParser = new QuickFixParser(fixConv.getFixToObj(), state);
+			fixFormatter = new QuickFixFormatter(fixConv, fixConv.getFormatter(), state);
+			fixParser = new QuickFixParser(fixConv, fixConv.getParser(), state);
 		} catch (Exception e) {
 			throw new TransportException("Unable to compile conversion schema.", e);
-		} finally {
-			IOUtil.close(is);
 		}
 	}
 

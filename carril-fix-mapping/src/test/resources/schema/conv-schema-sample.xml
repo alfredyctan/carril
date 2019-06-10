@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fix-conv xmlns="http://www.afc.org/carril/fix" package-prefix="org.afc.carril.sample">
+	<parser>
+		<msg-map name="sampleA" source="FIX-TRAILER" source-index="${9501}" source-expression="999" target-type="Sample">
+			<tags>
+				<tag name="Msg ID"      type="STRING" source="SCHEMA" source-index="MsgA"   target="OBJ" target-index="MsgID" use="REQ" />
+				<tag name="F2O Level1 9100" type="GROUP"  source="FIX"    source-index="${9100}" target="OBJ" target-index="9100"  use="OPT">
+					<tag name="F2O Level1 name 9101"  type="STRING" source="FIX" source-index="${9101}" target="OBJ" target-index="9101" use="OPT"/>
+					<tag name="F2O Level1 value 9102" type="INT"    source="FIX" source-index="${9102}" target="OBJ" target-index="9102" use="OPT"/>
+					<tag name="F2O Level2 9200"      type="GROUP"  source="FIX" source-index="${9200}" target="OBJ" target-index="9200"   use="REQ">
+						<tag name="F2O Level2 name 9201"  type="STRING" source="FIX" source-index="${9201}" target="OBJ" target-index="9201"   use="REQ"/>
+						<tag name="F2O Level2 value 9202" type="INT"    source="FIX" source-index="${9202}" target="OBJ" target-index="9202"   use="REQ"/>
+						<tag name="F2O Level3 9300"      type="GROUP"  source="FIX" source-index="${9300}" target="OBJ" target-index="9300" use="REQ">
+							<tag name="F2O Level name 9301" type="STRING" source="FIX" source-index="${9301}" target="OBJ" target-index="9301" use="REQ"/>
+							<tag name="F2O Level name 9301" type="INT" source="FIX" source-index="${9302}" target="OBJ" target-index="9302" use="REQ"/>
+						</tag>
+					</tag>
+				</tag>
+				<tag name="INT-FIX"         type="INT"           source="FIX-TRAILER"    source-index="${9501}" target="OBJ"  target-index="9501"       use="REQ" />
+				<tag name="STRING-FIX"      type="STRING"        source="FIX"            source-index="${9001}" target="OBJ"  target-index="9001"        use="OPT" />
+				<tag name="DECIMAL-FIX"     type="DECIMAL"       source="FIX"            source-index="${9002}" target="OBJ"  target-index="9002"       use="OPT" />
+				<tag name="DOUBLE-FIX"      type="DOUBLE"        source="FIX"            source-index="${9003}" target="OBJ"  target-index="9003"      use="OPT" />
+				<tag name="DATETIME-FIX"    type="DATETIME"      source="FIX"            source-index="${9004}" target="OBJ"  target-index="9004"      use="OPT" />
+				<tag name="DATETIMES-FIX"   type="DATETIMESTAMP" source="FIX-HEADER"     source-index="${9052}" target="OBJ"  target-index="9052" use="OPT" />
+				<tag name="DATE-FIX"        type="DATE"          source="FIX"            source-index="${9005}" target="OBJ"  target-index="9005"          use="OPT" />
+				<tag name="TIME-FIX"        type="TIME"          source="FIX"            source-index="${9006}" target="OBJ"  target-index="9006"          use="OPT" />
+				<tag name="TIMES-FIX"       type="TIMESTAMP"     source="FIX"            source-index="${9007}" target="OBJ"  target-index="9007"     use="OPT" />
+				<tag name="BOOLEAN-FIX"     type="BOOLEAN"       source="FIX-TRAILER"    source-index="${9008}" target="OBJ"  target-index="9008"          use="OPT" />
+				<tag name="FROM-SCHEMA"     type="STRING"        source="SCHEMA"         source-index="Value from schema" target="OBJ"  target-index="fromSchema"          use="OPT" />
+				<tag name="BYTES-FIX"       type="BYTES"         source="FIX"            source-index="${9011}" target="OBJ"  target-index="9011"         use="OPT" />
+				<tag name="STATE1-FIX"      type="DECIMAL"       source="SCHEMA"         source-index="10"      target="OBJ"  target-index="field1"        use="OPT" />
+				<tag name="STATE2-FIX"      type="DECIMAL"       source="SCHEMA"         source-index="20"      target="OBJ"  target-index="field2"        use="OPT" />
+				
+				<tag name="CONST-FIX"     	type="STRING"        source="CONST"  source-index="SomeConstant.CONST_A"   target="OBJ"          target-index="constant"   use="OPT" />
+				<tag name="OPTIONAL"      	type="DECIMAL"       source="FIX"    source-index="${9050}"      target="OBJ"          target-index="9050" use="OPT" />
+				<tag name="PROHIBIT"      	type="DECIMAL"       source="FIX"    source-index="${9060}"      target="OBJ"          target-index="9060" use="PRO" />
+
+			</tags>
+		</msg-map>
+		<msg-map name="sample1" source="FIX-HEADER" source-index="${35}" source-expression="R" target-type="org.afc.carril.sample.Sample">
+			<conditions>
+				<condition source="FIX-TRAILER" source-index="${9501}" source-expression="100" />
+			</conditions>
+			<tags>
+				<tag name="Msg ID"      type="STRING" source="SCHEMA" source-index="MsgA"   target="OBJ" target-index="MsgID" use="REQ" />
+				<tag name="INT-FIX"         type="INT"           source="FIX-TRAILER"    source-index="${9501}" target="OBJ"  target-index="9501"       use="REQ" />
+				<tag name="STRING-FIX"      type="STRING"        source="FIX"            source-index="${9001}" target="OBJ"  target-index="9001"        use="OPT" />
+			</tags>
+		</msg-map>
+	</parser>
+	<formatter>
+		<msg-map name="sampleB" source="CLASS" source-index="simple" source-expression="Sample" target-type="R">
+			<conditions>
+				<condition source="OBJ" source-index="${9501}" source-expression="999" />
+			</conditions>
+			<tags>
+				<tag name="O2F Level1 9100" type="GROUP"         source="OBJ"    source-index="${9100}"          target="FIX"          target-index="9100" use="OPT">
+					<tag name="O2F Level1 name 9101" type="STRING" source="OBJ" source-index="${9101}" target="FIX" target-index="9101" use="OPT"/>
+					<tag name="O2F Level1 value 9102" type="INT" source="OBJ" source-index="${9102}"   target="FIX" target-index="9102" use="OPT"/>
+					<tag name="O2F Level2 9200"      type="GROUP"  source="OBJ" source-index="${9200}" target="FIX" target-index="9200" use="OPT">
+						<tag name="Level2 name 9201" type="STRING" source="OBJ" source-index="${9201}" target="FIX" target-index="9201" use="OPT"/>
+						<tag name="Level2 value 9202" type="INT" source="OBJ" source-index="${9202}"   target="FIX" target-index="9202" use="OPT"/>
+						<tag name="Level3 9300"      type="GROUP"  source="OBJ" source-index="${9300}" target="FIX" target-index="9300" use="OPT">
+							<tag name="Level name 9301" type="STRING" source="OBJ" source-index="${9301}" target="FIX" target-index="9301" use="OPT"/>
+							<tag name="Level value 9302" type="INT" source="OBJ" source-index="${9302}"   target="FIX" target-index="9302" use="OPT"/>
+						</tag>
+					</tag>
+				</tag>
+
+				<tag name="INT-FIX"         type="INT"           source="OBJ" source-index="${9501}" target="FIX-TRAILER"  target-index="9501" use="REQ" />
+				<tag name="STRING-FIX"      type="STRING"        source="OBJ" source-index="${9001}" target="FIX"          target-index="9001" use="OPT" />
+				<tag name="DECIMAL-FIX"     type="DECIMAL"       source="OBJ" source-index="${9002}" target="FIX"          target-index="9002" use="OPT" />
+				<tag name="DOUBLE-FIX"      type="DOUBLE"        source="OBJ" source-index="${9003}" target="FIX"          target-index="9003" use="OPT" />
+				<tag name="DATETIME-FIX"    type="DATETIME"      source="OBJ" source-index="${9004}" target="FIX"          target-index="9004" use="OPT" />
+				<tag name="DATETIMES-FIX"   type="DATETIMESTAMP" source="OBJ" source-index="${9052}" target="FIX-HEADER"   target-index="9052" use="OPT" />
+				<tag name="DATE-FIX"        type="DATE"          source="OBJ" source-index="${9005}" target="FIX"          target-index="9005" use="OPT" />
+				<tag name="TIME-FIX"        type="TIME"          source="OBJ" source-index="${9006}" target="FIX"          target-index="9006" use="OPT" />
+				<tag name="TIMES-FIX"       type="TIMESTAMP"     source="OBJ" source-index="${9007}" target="FIX"          target-index="9007" use="OPT" />
+				<tag name="BOOLEAN-FIX"     type="BOOLEAN"       source="OBJ" source-index="${9008}" target="FIX-TRAILER"  target-index="9008" use="OPT" />
+				<tag name="BYTES-FIX"       type="BYTES"         source="OBJ" source-index="${9011}" target="FIX"          target-index="9011" use="OPT" />
+
+				<!-- put to state with dynamic state key and get from state to fix message -->
+				<tag name="OBJ-STATE-DYN"	type="DECIMAL"       source="OBJ"    source-index="${field1}"        target="STATE"        target-index="${field2}" use="OPT" />
+				<tag name="STATE-DYN-FIX" 	type="DECIMAL"       source="STATE"  source-index="${field2}"        target="FIX"          target-index="19001"                  />
+				<tag name="OBJ-FIX"       	type="DECIMAL"       source="OBJ"    source-index="${field1}"        target="FIX"          target-index="9009"      use="OPT" />
+				<!-- / put to state with dynamic state key -->
+				
+				<!-- multi field mapping -->
+				<tag name="MF-OBJ-FIX"    	type="STRING"        source="OBJ"    source-index="${field1}/${field2}" target="FIX" target-index="9010" use="OPT" />
+				<!-- / multi field mapping -->
+				
+				<!-- simple object to state -->
+				<tag name="OBJ-STATE"     	type="STRING"        source="OBJ"    source-index="${field1}"        target="STATE"        target-index="key1" use="OPT" />
+				<!-- /simple object to state -->
+				
+				<!-- put to state with dynamic state composite key and get back from state to fix message -->
+				<tag name="OBJ-STATE-DYN"	type="DECIMAL"  source="OBJ"    source-index="${field1}"                   target="STATE" target-index="key1/${field2}/${field2}" use="OPT" />
+				<tag name="STATE-DYN-FIX" 	type="DECIMAL"  source="STATE"  source-index="key1/${field2}/${field2}"    target="FIX"   target-index="9020"/>
+				<!-- / put to state with dynamic state composite key and get back from state to fix message -->
+
+				<!-- constant to fix or state -->
+				<tag name="CONST-FIX"     	type="STRING"        source="CONST"  source-index="SomeConstant.CONST_A"   target="FIX"          target-index="9030"   use="OPT" />
+				<tag name="CONST-STATE"   	type="STRING"        source="CONST"  source-index="SomeConstant.CONST_A"   target="STATE"        target-index="const1" use="OPT" />
+				<!-- / constant to fix or state -->
+				
+				<!-- get from state with static key  -->
+				<tag name="STATE-FIX"     	type="STRING"        source="STATE"  source-index="key1"             target="STATE"        target-index="9031" use="OPT" />
+				<!-- / get from state with static key  -->
+
+				<tag name="SCHEMA-FIX"    	type="STRING"        source="SCHEMA" source-index="Value in Schema"  target="FIX"          target-index="9040" use="OPT" />
+				<tag name="OPTIONAL"      	type="DECIMAL"       source="OBJ"    source-index="${9050}"      target="FIX"          target-index="9050" use="OPT" />
+				<tag name="PROHIBIT"      	type="DECIMAL"       source="OBJ"    source-index="${9060}"      target="FIX"          target-index="9060" use="PRO" />
+			</tags>
+			<on-error>
+				<tag name="CONST-OBJ"  source="CONST"  source-index="Const.A_CONSTANT"  target="FIX"   target-index="10" use="OPT" />
+				<tag name="SCHEMA-OBJ" source="SCHEMA" source-index="Defined in Schema" target="FIX"   target-index="20" use="OPT" />
+				<tag name="STATE-OBJ"  source="STATE"  source-index="key1"              target="STATE" target-index="30" use="OPT" />
+			</on-error>
+		</msg-map>
+		<msg-map name="sample1" source="OBJ" source-index="${MsgID}" source-expression="MsgA" target-type="R">
+			<conditions>
+				<condition source="OBJ" source-index="${9501}" source-expression="100" />
+			</conditions>
+			<tags>
+				<tag name="INT-FIX"         type="INT"           source="OBJ"    source-index="${9501}"       target="FIX-TRAILER"  target-index="9501" use="REQ" />
+				<tag name="STRING-FIX"      type="STRING"        source="OBJ"    source-index="${9001}"        target="FIX"          target-index="9001" use="OPT" />
+			</tags>
+			<on-error>
+				<tag name="CONST-OBJ"  source="CONST"  source-index="Const.A_CONSTANT"  target="FIX"   target-index="10" use="OPT" />
+				<tag name="SCHEMA-OBJ" source="SCHEMA" source-index="Defined in Schema" target="FIX"   target-index="20" use="OPT" />
+				<tag name="STATE-OBJ"  source="STATE"  source-index="key1"              target="STATE" target-index="30" use="OPT" />
+			</on-error>
+		</msg-map>
+	</formatter>
+</fix-conv>

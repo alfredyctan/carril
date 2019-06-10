@@ -1,17 +1,17 @@
 package org.afc.carril.text;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
 import org.afc.carril.text.LongFormat;
-import org.afc.util.JUnit4Util;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import org.afc.util.JUnitUtil;
 
 public class LongFormatTest {
 
@@ -33,7 +33,7 @@ public class LongFormatTest {
 	
 	@Test
 	public void testLongFormat() {
-		JUnit4Util.startCurrentTest(getClass());
+		JUnitUtil.startCurrentTest(getClass());
 		try {
 			Long i = (Long)new LongFormat().parseObject("99");
 			assertEquals("99", new LongFormat().format(i));
@@ -41,6 +41,6 @@ public class LongFormatTest {
 	        e.printStackTrace();
 	        fail(e.getMessage());
         }
-		JUnit4Util.endCurrentTest(getClass());
+		JUnitUtil.endCurrentTest(getClass());
 	}
 }

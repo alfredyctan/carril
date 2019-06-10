@@ -31,21 +31,21 @@ public class FixMsgTypeTest {
 	@Test
 	public void testValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals("h", FixMsgType.TYPE_h.id());
+		assertEquals("h", FixMsgType.h.id());
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testFromValue() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals(FixMsgType.TYPE_h, FixMsgType.fromID("h"));
+		assertEquals(FixMsgType.h, FixMsgType.fromId("h"));
 		JUnit4Util.endCurrentTest(getClass());
 	}
 
 	@Test
 	public void testToString() {
 		JUnit4Util.startCurrentTest(getClass());
-		assertEquals("h(Trading Session Status)", FixMsgType.TYPE_h.toString());
+		assertEquals("h(TradingSessionStatus)", FixMsgType.h.toString());
 		JUnit4Util.endCurrentTest(getClass());
 	}
 

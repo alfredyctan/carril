@@ -12,7 +12,7 @@
     			</element>
     			<element name="state-init" type="fix:state-init"></element>
     			<element name="obj-to-fix" type="fix:obj-to-fix"></element>
-    			<element name="fix-to-obj" type="fix:fix-to-obj"></element>
+    			<element name="fix-to-obj" type="fix:fix-to-obj"></element>
     		</sequence>
     	</complexType>
     </element>
